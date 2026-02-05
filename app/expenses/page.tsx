@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -25,6 +25,7 @@ interface Expense {
 
 function ExpenseListContent() {
     const router = useRouter();
+    const pathname = usePathname();
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({
@@ -38,7 +39,26 @@ function ExpenseListContent() {
 
     useEffect(() => {
         fetchExpenses();
-    }, [page, filters]);
+    }, [page, filters, pathname]); // Added pathname to trigger refetch
+
+    // Refetch when component mounts or becomes visible (e.g., after adding expense)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchExpenses();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Also refetch when window gains focus
+        window.addEventListener('focus', fetchExpenses);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('focus', fetchExpenses);
+        };
+    }, []);
 
     const fetchExpenses = async () => {
         setLoading(true);

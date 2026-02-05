@@ -38,6 +38,7 @@ export default function Navbar() {
     };
 
     const getInitials = (name: string) => {
+        if (!name) return 'U';
         return name
             .split(' ')
             .map((n) => n[0])

@@ -41,7 +41,9 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            ...result,
+            expenses: result.data, // Rename 'data' to 'expenses' for frontend
+            pagination: result.pagination,
+            totalPages: result.pagination.totalPages,
         });
     } catch (error: any) {
         console.error('Get expenses error:', error);
