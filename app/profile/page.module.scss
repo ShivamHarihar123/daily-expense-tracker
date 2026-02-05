@@ -1,0 +1,192 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: $spacing-8 $spacing-6;
+}
+
+.header {
+    margin-bottom: $spacing-8;
+}
+
+.title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    margin-bottom: $spacing-2;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.subtitle {
+    color: $gray-600;
+    font-size: $font-size-base;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: $spacing-8;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.sidebar {
+    @include flex-column;
+    gap: $spacing-2;
+}
+
+.tabButton {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-3;
+    padding: $spacing-3 $spacing-4;
+    border-radius: $radius-lg;
+    background: transparent;
+    border: none;
+    color: $gray-700;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-align: left;
+
+    &:hover {
+        background: $gray-100;
+    }
+
+    &.active {
+        background: $primary-100;
+        color: $primary-700;
+
+        [data-theme='dark'] & {
+            background: rgba($primary-600, 0.2);
+            color: $primary-400;
+        }
+    }
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+
+        &:hover {
+            background: $dark-surface-light;
+        }
+    }
+}
+
+.content {
+    min-height: 400px;
+}
+
+.form {
+    @include flex-column;
+    gap: $spacing-5;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-4;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.avatarSection {
+    @include flex-center;
+    gap: $spacing-6;
+    padding: $spacing-6;
+    background: $gray-50;
+    border-radius: $radius-xl;
+    margin-bottom: $spacing-6;
+
+    [data-theme='dark'] & {
+        background: $dark-surface-light;
+    }
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: $radius-full;
+    background: $primary-100;
+    @include flex-center;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $primary-700;
+
+    [data-theme='dark'] & {
+        background: rgba($primary-600, 0.2);
+        color: $primary-400;
+    }
+}
+
+.avatarInfo {
+    flex: 1;
+
+    h3 {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-semibold;
+        color: $gray-900;
+        margin-bottom: $spacing-2;
+
+        [data-theme='dark'] & {
+            color: $dark-text;
+        }
+    }
+
+    p {
+        color: $gray-600;
+        margin-bottom: $spacing-3;
+
+        [data-theme='dark'] & {
+            color: $dark-text-secondary;
+        }
+    }
+}
+
+.actions {
+    @include flex-center;
+    gap: $spacing-3;
+    margin-top: $spacing-6;
+    padding-top: $spacing-6;
+    border-top: 1px solid $gray-200;
+
+    [data-theme='dark'] & {
+        border-top-color: $dark-border;
+    }
+}
+
+.dangerZone {
+    margin-top: $spacing-8;
+    padding: $spacing-6;
+    border: 2px solid $error;
+    border-radius: $radius-xl;
+    background: rgba($error, 0.05);
+}
+
+.dangerTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $error;
+    margin-bottom: $spacing-3;
+}
+
+.dangerText {
+    color: $gray-700;
+    margin-bottom: $spacing-4;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}

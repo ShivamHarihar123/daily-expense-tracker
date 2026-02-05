@@ -1,0 +1,137 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.toast {
+    position: fixed;
+    bottom: $spacing-6;
+    right: $spacing-6;
+    min-width: 300px;
+    max-width: 500px;
+    padding: $spacing-4 $spacing-5;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-2xl;
+    @include flex-center;
+    gap: $spacing-3;
+    z-index: $z-toast;
+    animation: slideIn 0.3s ease-out;
+
+    [data-theme='dark'] & {
+        box-shadow: $shadow-dark-2xl;
+    }
+
+    &.success {
+        background: white;
+        border-left: 4px solid $success;
+        color: $gray-900;
+
+        [data-theme='dark'] & {
+            background: $dark-surface;
+            color: $dark-text;
+        }
+    }
+
+    &.error {
+        background: white;
+        border-left: 4px solid $error;
+        color: $gray-900;
+
+        [data-theme='dark'] & {
+            background: $dark-surface;
+            color: $dark-text;
+        }
+    }
+
+    &.warning {
+        background: white;
+        border-left: 4px solid $warning;
+        color: $gray-900;
+
+        [data-theme='dark'] & {
+            background: $dark-surface;
+            color: $dark-text;
+        }
+    }
+
+    &.info {
+        background: white;
+        border-left: 4px solid $primary-600;
+        color: $gray-900;
+
+        [data-theme='dark'] & {
+            background: $dark-surface;
+            color: $dark-text;
+        }
+    }
+}
+
+.icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.content {
+    flex: 1;
+}
+
+.title {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-1;
+}
+
+.message {
+    font-size: $font-size-sm;
+    color: $gray-600;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: $gray-500;
+    cursor: pointer;
+    padding: 0;
+    font-size: $font-size-xl;
+    line-height: 1;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $gray-900;
+
+        [data-theme='dark'] & {
+            color: $dark-text;
+        }
+    }
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toastContainer {
+    position: fixed;
+    bottom: $spacing-6;
+    right: $spacing-6;
+    z-index: $z-toast;
+    @include flex-column;
+    gap: $spacing-3;
+    pointer-events: none;
+
+    >* {
+        pointer-events: all;
+    }
+}

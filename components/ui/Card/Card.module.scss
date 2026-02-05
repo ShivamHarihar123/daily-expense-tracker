@@ -1,0 +1,74 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.card {
+    @include card;
+    @include smooth-transition;
+
+    &.hoverable {
+        @include hover-lift;
+        cursor: pointer;
+    }
+
+    &.glass {
+        @include glass;
+    }
+}
+
+.header {
+    margin-bottom: $spacing-4;
+    padding-bottom: $spacing-4;
+    border-bottom: 1px solid $gray-200;
+
+    [data-theme='dark'] & {
+        border-bottom-color: $dark-border;
+    }
+}
+
+.title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    margin: 0;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.subtitle {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    margin-top: $spacing-2;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.body {
+    color: $gray-700;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.footer {
+    margin-top: $spacing-4;
+    padding-top: $spacing-4;
+    border-top: 1px solid $gray-200;
+
+    [data-theme='dark'] & {
+        border-top-color: $dark-border;
+    }
+}
+
+// Padding variants
+.noPadding {
+    padding: 0;
+}
+
+.compact {
+    padding: $spacing-4;
+}

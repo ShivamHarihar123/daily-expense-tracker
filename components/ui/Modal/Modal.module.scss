@@ -1,0 +1,129 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: $z-modal-backdrop;
+    animation: fadeIn $transition-base;
+    padding: $spacing-4;
+
+    [data-theme='dark'] & {
+        background: rgba(0, 0, 0, 0.7);
+    }
+}
+
+.modal {
+    background: white;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-2xl;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn $transition-base;
+    z-index: $z-modal;
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    &.sm {
+        max-width: 400px;
+    }
+
+    &.md {
+        max-width: 600px;
+    }
+
+    &.lg {
+        max-width: 800px;
+    }
+
+    &.xl {
+        max-width: 1000px;
+    }
+}
+
+.header {
+    padding: $spacing-6;
+    border-bottom: 1px solid $gray-200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    [data-theme='dark'] & {
+        border-bottom-color: $dark-border;
+    }
+}
+
+.title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    margin: 0;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: $gray-500;
+    cursor: pointer;
+    padding: $spacing-2;
+    border-radius: $radius-md;
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: $gray-100;
+        color: $gray-700;
+    }
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+
+        &:hover {
+            background: $dark-surface-light;
+            color: $dark-text;
+        }
+    }
+}
+
+.body {
+    padding: $spacing-6;
+    overflow-y: auto;
+    flex: 1;
+    color: $gray-700;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.footer {
+    padding: $spacing-6;
+    border-top: 1px solid $gray-200;
+    display: flex;
+    gap: $spacing-3;
+    justify-content: flex-end;
+
+    [data-theme='dark'] & {
+        border-top-color: $dark-border;
+    }
+}

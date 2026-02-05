@@ -1,0 +1,132 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.inputWrapper {
+    margin-bottom: $spacing-4;
+}
+
+.label {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-700;
+    margin-bottom: $spacing-2;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+
+    .required {
+        color: $error;
+        margin-left: $spacing-1;
+    }
+}
+
+.inputContainer {
+    position: relative;
+}
+
+.input,
+.textarea,
+.select {
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    border: 2px solid $gray-300;
+    border-radius: $radius-lg;
+    font-size: $font-size-base;
+    color: $gray-900;
+    background: white;
+    transition: all $transition-base;
+
+    &:focus {
+        outline: none;
+        border-color: $primary-500;
+        box-shadow: 0 0 0 3px rgba($primary-500, 0.1);
+    }
+
+    &::placeholder {
+        color: $gray-400;
+    }
+
+    &:disabled {
+        background: $gray-100;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        border-color: $dark-border;
+        color: $dark-text;
+
+        &:focus {
+            border-color: $primary-400;
+            box-shadow: 0 0 0 3px rgba($primary-400, 0.1);
+        }
+
+        &::placeholder {
+            color: $dark-text-secondary;
+        }
+
+        &:disabled {
+            background: $dark-surface-light;
+        }
+    }
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-4 center;
+    padding-right: $spacing-10;
+}
+
+.error {
+    border-color: $error !important;
+
+    &:focus {
+        box-shadow: 0 0 0 3px rgba($error, 0.1) !important;
+    }
+}
+
+.errorMessage {
+    display: block;
+    margin-top: $spacing-2;
+    font-size: $font-size-sm;
+    color: $error;
+}
+
+.helperText {
+    display: block;
+    margin-top: $spacing-2;
+    font-size: $font-size-sm;
+    color: $gray-600;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.icon {
+    position: absolute;
+    left: $spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $gray-400;
+    pointer-events: none;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.withIcon {
+    padding-left: $spacing-10;
+}

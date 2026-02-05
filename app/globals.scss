@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import '../styles/variables.scss';
+@import '../styles/mixins.scss';
+
+// ========================
+// GLOBAL RESET
+// ========================
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-family;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    line-height: $line-height-normal;
+    color: $gray-900;
+    background-color: $gray-50;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color $transition-base, color $transition-base;
+
+    &[data-theme='dark'] {
+        color: $dark-text;
+        background-color: $dark-bg;
+    }
+}
+
+// ========================
+// SCROLLBAR
+// ========================
+body {
+    @include custom-scrollbar;
+}
+
+// ========================
+// TYPOGRAPHY
+// ========================
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-tight;
+    margin-bottom: $spacing-4;
+}
+
+h1 {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-bold;
+}
+
+h2 {
+    font-size: $font-size-3xl;
+}
+
+h3 {
+    font-size: $font-size-2xl;
+}
+
+h4 {
+    font-size: $font-size-xl;
+}
+
+h5 {
+    font-size: $font-size-lg;
+}
+
+h6 {
+    font-size: $font-size-base;
+}
+
+p {
+    margin-bottom: $spacing-4;
+}
+
+a {
+    color: $primary-600;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $primary-700;
+    }
+
+    [data-theme='dark'] & {
+        color: $primary-400;
+
+        &:hover {
+            color: $primary-300;
+        }
+    }
+}
+
+// ========================
+// BUTTONS
+// ========================
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+}
+
+// ========================
+// INPUTS
+// ========================
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+}
+
+// ========================
+// UTILITY CLASSES
+// ========================
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 $spacing-4;
+
+    @include lg {
+        padding: 0 $spacing-6;
+    }
+}
+
+.text-gradient {
+    @include gradient-text;
+}
+
+.glass {
+    @include glass;
+}
+
+// ========================
+// ANIMATIONS
+// ========================
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn $transition-base;
+}
+
+.animate-slideUp {
+    animation: slideUp $transition-base;
+}
+
+.animate-slideDown {
+    animation: slideDown $transition-base;
+}
+
+.animate-scaleIn {
+    animation: scaleIn $transition-base;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}

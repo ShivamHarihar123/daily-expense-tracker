@@ -1,0 +1,227 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: $spacing-8 $spacing-6;
+}
+
+.header {
+    @include flex-between;
+    margin-bottom: $spacing-8;
+    flex-wrap: wrap;
+    gap: $spacing-4;
+}
+
+.title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    margin: 0;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.actions {
+    @include flex-center;
+    gap: $spacing-3;
+}
+
+.filters {
+    @include glass;
+    padding: $spacing-6;
+    border-radius: $radius-xl;
+    margin-bottom: $spacing-6;
+}
+
+.filterGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-4;
+    margin-bottom: $spacing-4;
+}
+
+.filterActions {
+    @include flex-center;
+    gap: $spacing-3;
+    justify-content: flex-end;
+}
+
+.expenseList {
+    @include flex-column;
+    gap: $spacing-4;
+}
+
+.expenseCard {
+    @include card;
+    padding: $spacing-5;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+
+        [data-theme='dark'] & {
+            box-shadow: $shadow-dark-lg;
+        }
+    }
+}
+
+.expenseHeader {
+    @include flex-between;
+    margin-bottom: $spacing-3;
+}
+
+.expenseTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    margin: 0;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.expenseAmount {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $primary-600;
+
+    [data-theme='dark'] & {
+        color: $primary-400;
+    }
+}
+
+.expenseDetails {
+    @include flex-center;
+    gap: $spacing-4;
+    flex-wrap: wrap;
+    color: $gray-600;
+    font-size: $font-size-sm;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.expenseDetail {
+    @include flex-center;
+    gap: $spacing-2;
+}
+
+.category {
+    display: inline-flex;
+    align-items: center;
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-full;
+    background: $primary-100;
+    color: $primary-700;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+
+    [data-theme='dark'] & {
+        background: rgba($primary-600, 0.2);
+        color: $primary-400;
+    }
+}
+
+.tags {
+    @include flex-center;
+    gap: $spacing-2;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: $spacing-1 $spacing-2;
+    border-radius: $radius-md;
+    background: $gray-200;
+    color: $gray-700;
+    font-size: $font-size-xs;
+
+    [data-theme='dark'] & {
+        background: $dark-surface-light;
+        color: $dark-text-secondary;
+    }
+}
+
+.pagination {
+    @include flex-center;
+    gap: $spacing-2;
+    margin-top: $spacing-8;
+}
+
+.pageButton {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    background: white;
+    border: 1px solid $gray-300;
+    color: $gray-700;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+        background: $primary-50;
+        border-color: $primary-500;
+        color: $primary-600;
+    }
+
+    &.active {
+        background: $primary-600;
+        border-color: $primary-600;
+        color: white;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        border-color: $dark-border;
+        color: $dark-text;
+
+        &:hover:not(:disabled) {
+            background: rgba($primary-600, 0.2);
+            border-color: $primary-400;
+            color: $primary-400;
+        }
+
+        &.active {
+            background: $primary-600;
+            border-color: $primary-600;
+            color: white;
+        }
+    }
+}
+
+.empty {
+    text-align: center;
+    padding: $spacing-16 $spacing-6;
+    color: $gray-500;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+
+    .emptyIcon {
+        font-size: 4rem;
+        margin-bottom: $spacing-4;
+    }
+
+    h3 {
+        font-size: $font-size-xl;
+        margin-bottom: $spacing-2;
+    }
+
+    p {
+        margin-bottom: $spacing-6;
+    }
+}

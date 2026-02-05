@@ -1,0 +1,187 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.container {
+    min-height: 100vh;
+    @include flex-center;
+    padding: $spacing-6;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0f2fe 100%);
+
+    [data-theme='dark'] & {
+        background: linear-gradient(135deg, $dark-bg 0%, $dark-surface 100%);
+    }
+}
+
+.card {
+    width: 100%;
+    max-width: 450px;
+    padding: $spacing-8;
+    background: white;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-2xl;
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+}
+
+.header {
+    text-align: center;
+    margin-bottom: $spacing-8;
+}
+
+.logo {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-4;
+}
+
+.title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    margin-bottom: $spacing-2;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.subtitle {
+    font-size: $font-size-base;
+    color: $gray-600;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.form {
+    @include flex-column;
+    gap: $spacing-4;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: $spacing-6 0;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 45%;
+        height: 1px;
+        background: $gray-300;
+
+        [data-theme='dark'] & {
+            background: $dark-border;
+        }
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+
+    span {
+        background: white;
+        padding: 0 $spacing-3;
+        color: $gray-500;
+        font-size: $font-size-sm;
+
+        [data-theme='dark'] & {
+            background: $dark-surface;
+            color: $dark-text-secondary;
+        }
+    }
+}
+
+.oauthButton {
+    @include flex-center;
+    gap: $spacing-3;
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    border: 2px solid $gray-300;
+    border-radius: $radius-lg;
+    background: white;
+    color: $gray-700;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+        border-color: $gray-400;
+        background: $gray-50;
+    }
+
+    [data-theme='dark'] & {
+        background: $dark-surface-light;
+        border-color: $dark-border;
+        color: $dark-text;
+
+        &:hover {
+            border-color: $dark-text-secondary;
+            background: $dark-surface;
+        }
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.footer {
+    text-align: center;
+    margin-top: $spacing-6;
+    color: $gray-600;
+    font-size: $font-size-sm;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+
+    a {
+        color: $primary-600;
+        font-weight: $font-weight-medium;
+        text-decoration: none;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $primary-700;
+        }
+
+        [data-theme='dark'] & {
+            color: $primary-400;
+
+            &:hover {
+                color: $primary-300;
+            }
+        }
+    }
+}
+
+.error {
+    padding: $spacing-3 $spacing-4;
+    background: rgba($error, 0.1);
+    border: 1px solid $error;
+    border-radius: $radius-md;
+    color: $error;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-4;
+}
+
+.success {
+    padding: $spacing-3 $spacing-4;
+    background: rgba($success, 0.1);
+    border: 1px solid $success;
+    border-radius: $radius-md;
+    color: $success;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-4;
+}
