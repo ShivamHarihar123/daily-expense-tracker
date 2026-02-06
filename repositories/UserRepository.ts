@@ -20,8 +20,15 @@ export class UserRepository {
      */
     async findByEmail(email: string): Promise<IUser | null> {
         await connectDB();
-        const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
-        return user ? (user.toJSON() as IUser) : null;
+        const user = await User.findOne({ email: email.toLowerCase() }).select('+password').lean();
+        if (!user) return null;
+
+        // Convert _id to string manually since we're using lean()
+        // lean() returns plain JS object and doesn't call toJSON() which strips password
+        return {
+            ...user,
+            _id: user._id.toString(),
+        } as IUser;
     }
 
     /**
