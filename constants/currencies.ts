@@ -1,10 +1,10 @@
 import { Currency } from '@/types/enums';
 
 export const CURRENCIES = [
+    Currency.INR,
     Currency.USD,
     Currency.EUR,
     Currency.GBP,
-    Currency.INR,
     Currency.JPY,
     Currency.AUD,
     Currency.CAD,
@@ -56,7 +56,9 @@ export function convertCurrency(
  */
 export function formatCurrency(amount: number, currency: Currency): string {
     const symbol = CURRENCY_SYMBOLS[currency];
-    const formattedAmount = amount.toLocaleString('en-US', {
+    // Use Indian locale for INR to get proper formatting (e.g., 1,00,000 instead of 100,000)
+    const locale = currency === Currency.INR ? 'en-IN' : 'en-US';
+    const formattedAmount = amount.toLocaleString(locale, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     });

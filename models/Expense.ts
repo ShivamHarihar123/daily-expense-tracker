@@ -24,7 +24,7 @@ const ExpenseSchema = new Schema<IExpense>(
         currency: {
             type: String,
             enum: Object.values(Currency),
-            default: Currency.USD,
+            default: Currency.INR,
         },
         category: {
             type: String,
@@ -71,7 +71,7 @@ const ExpenseSchema = new Schema<IExpense>(
         toJSON: {
             transform: function (doc, ret) {
                 ret._id = ret._id.toString();
-                delete ret.__v;
+                if (ret.__v !== undefined) delete ret.__v;
                 return ret;
             },
         },

@@ -40,26 +40,70 @@ $dark-surface: #1e293b;
 $dark-surface-light: #334155;
 $dark-border: #475569;
 $dark-text: #f1f5f9;
+$dark-text-primary: $dark-text;
 $dark-text-secondary: #cbd5e1;
 
 // Semantic Colors
 $success: #10b981;
+$success-50: lighten($success, 48%);
+$success-100: lighten($success, 45%);
+$success-200: lighten($success, 35%);
+$success-300: lighten($success, 25%);
+$success-400: lighten($success, 15%);
+$success-500: $success;
+$success-600: darken($success, 10%);
+$success-700: darken($success, 20%);
+$success-800: darken($success, 30%);
+$success-900: darken($success, 40%);
+
 $warning: #f59e0b;
+$warning-50: lighten($warning, 48%);
+$warning-100: lighten($warning, 45%);
+$warning-200: lighten($warning, 35%);
+$warning-300: lighten($warning, 25%);
+$warning-400: lighten($warning, 15%);
+$warning-500: $warning;
+$warning-600: darken($warning, 10%);
+$warning-700: darken($warning, 20%);
+$warning-800: darken($warning, 30%);
+$warning-900: darken($warning, 40%);
+
 $error: #ef4444;
+$error-50: lighten($error, 48%);
+$error-100: lighten($error, 45%);
+$error-200: lighten($error, 35%);
+$error-300: lighten($error, 25%);
+$error-400: lighten($error, 15%);
+$error-500: $error;
+$error-600: darken($error, 10%);
+$error-700: darken($error, 20%);
+$error-800: darken($error, 30%);
+$error-900: darken($error, 40%);
+
 $info: #3b82f6;
+$info-50: lighten($info, 48%);
+$info-100: lighten($info, 45%);
+$info-200: lighten($info, 35%);
+$info-300: lighten($info, 25%);
+$info-400: lighten($info, 15%);
+$info-500: $info;
+$info-600: darken($info, 10%);
+$info-700: darken($info, 20%);
+$info-800: darken($info, 30%);
+$info-900: darken($info, 40%);
 
 // ========================
 // TYPOGRAPHY
 // ========================
 $font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-$font-size-xs: 0.75rem;    // 12px
-$font-size-sm: 0.875rem;   // 14px
-$font-size-base: 1rem;     // 16px
-$font-size-lg: 1.125rem;   // 18px
-$font-size-xl: 1.25rem;    // 20px
-$font-size-2xl: 1.5rem;    // 24px
-$font-size-3xl: 1.875rem;  // 30px
-$font-size-4xl: 2.25rem;   // 36px
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
 
 $font-weight-normal: 400;
 $font-weight-medium: 500;
@@ -73,26 +117,26 @@ $line-height-relaxed: 1.75;
 // ========================
 // SPACING
 // ========================
-$spacing-1: 0.25rem;   // 4px
-$spacing-2: 0.5rem;    // 8px
-$spacing-3: 0.75rem;   // 12px
-$spacing-4: 1rem;      // 16px
-$spacing-5: 1.25rem;   // 20px
-$spacing-6: 1.5rem;    // 24px
-$spacing-8: 2rem;      // 32px
-$spacing-10: 2.5rem;   // 40px
-$spacing-12: 3rem;     // 48px
-$spacing-16: 4rem;     // 64px
-$spacing-20: 5rem;     // 80px
+$spacing-1: 0.25rem; // 4px
+$spacing-2: 0.5rem; // 8px
+$spacing-3: 0.75rem; // 12px
+$spacing-4: 1rem; // 16px
+$spacing-5: 1.25rem; // 20px
+$spacing-6: 1.5rem; // 24px
+$spacing-8: 2rem; // 32px
+$spacing-10: 2.5rem; // 40px
+$spacing-12: 3rem; // 48px
+$spacing-16: 4rem; // 64px
+$spacing-20: 5rem; // 80px
 
 // ========================
 // BORDER RADIUS
 // ========================
-$radius-sm: 0.25rem;   // 4px
-$radius-md: 0.5rem;    // 8px
-$radius-lg: 0.75rem;   // 12px
-$radius-xl: 1rem;      // 16px
-$radius-2xl: 1.5rem;   // 24px
+$radius-sm: 0.25rem; // 4px
+$radius-md: 0.5rem; // 8px
+$radius-lg: 0.75rem; // 12px
+$radius-xl: 1rem; // 16px
+$radius-2xl: 1.5rem; // 24px
 $radius-full: 9999px;
 
 // ========================

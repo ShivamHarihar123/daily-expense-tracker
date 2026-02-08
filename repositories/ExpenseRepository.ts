@@ -242,6 +242,30 @@ export class ExpenseRepository {
         }).sort({ date: -1 });
         return expenses.map((e) => e.toJSON() as IExpense);
     }
+
+    // ========================
+    // ADMIN METHODS
+    // ========================
+
+    /**
+     * Count all expenses (admin only)
+     */
+    async countAllExpenses(): Promise<number> {
+        await connectDB();
+        return await Expense.countDocuments({ isDeleted: false });
+    }
+
+    /**
+     * Get total system spending (admin only)
+     */
+    async getTotalSystemSpending(): Promise<number> {
+        await connectDB();
+        const result = await Expense.aggregate([
+            { $match: { isDeleted: false } },
+            { $group: { _id: null, total: { $sum: '$amount' } } },
+        ]);
+        return result.length > 0 ? result[0].total : 0;
+    }
 }
 
 export default new ExpenseRepository();

@@ -4,6 +4,8 @@ import { authMiddleware } from '@/middleware/auth';
 import { validate } from '@/lib/utils/validation';
 import { createExpenseSchema, expenseFilterSchema, paginationSchema } from '@/lib/utils/validation';
 
+import { IExpenseCreate } from '@/types/models';
+
 /**
  * GET /api/expenses - Get all expenses with filters
  */
@@ -76,7 +78,7 @@ export async function POST(request: NextRequest) {
         // Create expense
         const expense = await ExpenseService.createExpense(
             authResult.user!.userId,
-            validatedData
+            validatedData as unknown as IExpenseCreate
         );
 
         return NextResponse.json(

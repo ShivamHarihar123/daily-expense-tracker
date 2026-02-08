@@ -166,7 +166,7 @@ function AnalyticsContent() {
                             <div className={styles.statIcon}>💸</div>
                             <div className={styles.statContent}>
                                 <p className={styles.statLabel}>Total Spent</p>
-                                <h2 className={styles.statValue}>${analytics.totalAmount.toFixed(2)}</h2>
+                                <h2 className={styles.statValue}>₹{analytics.totalAmount.toFixed(2)}</h2>
                             </div>
                         </div>
                     </Card.Body>
@@ -178,7 +178,7 @@ function AnalyticsContent() {
                             <div className={styles.statIcon}>📊</div>
                             <div className={styles.statContent}>
                                 <p className={styles.statLabel}>Average Expense</p>
-                                <h2 className={styles.statValue}>${analytics.averageExpense.toFixed(2)}</h2>
+                                <h2 className={styles.statValue}>₹{analytics.averageExpense.toFixed(2)}</h2>
                             </div>
                         </div>
                     </Card.Body>
@@ -210,7 +210,7 @@ function AnalyticsContent() {
                                     cx="50%"
                                     cy="50%"
                                     outerRadius={100}
-                                    label={(entry) => `${entry.category}: $${entry.amount.toFixed(0)}`}
+                                    label={(entry) => `${entry.category}: ₹${entry.amount.toFixed(0)}`}
                                 >
                                     {analytics.categoryDistribution.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -264,7 +264,7 @@ function AnalyticsContent() {
                                                 <div className={styles.categoryCount}>{cat.count} expenses</div>
                                             </div>
                                         </div>
-                                        <div className={styles.categoryAmount}>${cat.amount.toFixed(2)}</div>
+                                        <div className={styles.categoryAmount}>₹{cat.amount.toFixed(2)}</div>
                                     </div>
                                 ))}
                             </div>

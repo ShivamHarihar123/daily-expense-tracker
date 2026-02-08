@@ -48,11 +48,11 @@ export const createExpenseSchema = z.object({
     category: z.nativeEnum(ExpenseCategory, { errorMap: () => ({ message: 'Invalid category' }) }),
     date: z.coerce.date(),
     paymentMode: z.nativeEnum(PaymentMode, { errorMap: () => ({ message: 'Invalid payment mode' }) }),
-    currency: z.nativeEnum(Currency).optional().default(Currency.USD),
+    currency: z.nativeEnum(Currency).default(Currency.INR),
     notes: z.string().max(1000, 'Notes are too long').optional(),
     tags: z.array(z.string()).optional(),
     receiptUrl: z.string().url('Invalid URL').optional(),
-    isRecurring: z.boolean().optional().default(false),
+    recurring: z.boolean().default(false),
     recurringFrequency: z.nativeEnum(RecurringFrequency).optional(),
 });
 

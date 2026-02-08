@@ -45,6 +45,14 @@ export class BudgetRepository {
         const result = await Budget.findOneAndDelete({ userId });
         return !!result;
     }
+
+    /**
+     * Count all budgets (admin only)
+     */
+    async countAllBudgets(): Promise<number> {
+        await connectDB();
+        return await Budget.countDocuments();
+    }
 }
 
 export default new BudgetRepository();

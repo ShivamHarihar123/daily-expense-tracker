@@ -186,7 +186,7 @@ function BudgetsContent() {
             <Card className={styles.currentBudget}>
                 <Card.Body>
                     <div className={styles.budgetAmount}>
-                        ${budget.monthlyLimit.toFixed(2)}
+                        ₹{budget.monthlyLimit.toFixed(2)}
                     </div>
                     <p className={styles.budgetLabel}>Monthly Budget</p>
 
@@ -202,11 +202,11 @@ function BudgetsContent() {
                     <div className={styles.budgetStats}>
                         <div className={styles.budgetStat}>
                             <h4>Spent</h4>
-                            <p>${totalSpent.toFixed(2)}</p>
+                            <p>₹{totalSpent.toFixed(2)}</p>
                         </div>
                         <div className={styles.budgetStat}>
                             <h4>Remaining</h4>
-                            <p>${Math.max(0, budget.monthlyLimit - totalSpent).toFixed(2)}</p>
+                            <p>₹{Math.max(0, budget.monthlyLimit - totalSpent).toFixed(2)}</p>
                         </div>
                         <div className={styles.budgetStat}>
                             <h4>Alert at</h4>
@@ -233,7 +233,7 @@ function BudgetsContent() {
                                         <div className={styles.categoryHeader}>
                                             <span className={styles.categoryName}>{cat.category}</span>
                                             <span className={styles.categoryAmount}>
-                                                ${cat.spent.toFixed(2)} / ${cat.limit.toFixed(2)}
+                                                ₹{cat.spent.toFixed(2)} / ₹{cat.limit.toFixed(2)}
                                             </span>
                                         </div>
                                         <div className={styles.categoryProgress}>

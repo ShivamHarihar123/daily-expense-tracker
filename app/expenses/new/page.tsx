@@ -23,7 +23,7 @@ function AddExpenseContent() {
         category: '',
         date: new Date().toISOString().split('T')[0],
         paymentMode: PaymentMode.CASH,
-        currency: Currency.USD,
+        currency: Currency.INR,
         notes: '',
     });
     const [tags, setTags] = useState<string[]>([]);

@@ -151,6 +151,98 @@ export class UserRepository {
         const user = await User.findOne({ oauthProvider: provider, oauthId });
         return user ? (user.toJSON() as IUser) : null;
     }
+
+    // ========================
+    // ADMIN METHODS
+    // ========================
+
+    /**
+     * Get all users with pagination and filters (admin only)
+     */
+    async getAllUsers(filters: {
+        page: number;
+        limit: number;
+        search?: string;
+        role?: string;
+    }): Promise<{
+        users: IUser[];
+        pagination: {
+            currentPage: number;
+            totalPages: number;
+            totalItems: number;
+        };
+    }> {
+        await connectDB();
+        const { page, limit, search, role } = filters;
+        const skip = (page - 1) * limit;
+
+        const query: any = {};
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } },
+            ];
+        }
+        if (role) {
+            query.role = role;
+        }
+
+        const [users, total] = await Promise.all([
+            User.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }),
+            User.countDocuments(query),
+        ]);
+
+        return {
+            users: users.map((u) => u.toJSON() as IUser),
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(total / limit),
+                totalItems: total,
+            },
+        };
+    }
+
+    /**
+     * Count total users
+     */
+    async countUsers(): Promise<number> {
+        await connectDB();
+        return await User.countDocuments();
+    }
+
+    /**
+     * Get recent users
+     */
+    async getRecentUsers(limit: number = 10): Promise<IUser[]> {
+        await connectDB();
+        const users = await User.find().sort({ createdAt: -1 }).limit(limit);
+        return users.map((u) => u.toJSON() as IUser);
+    }
+
+    /**
+     * Update user (admin only)
+     */
+    async updateUser(id: string, updates: Partial<IUser>): Promise<IUser | null> {
+        await connectDB();
+        const user = await User.findByIdAndUpdate(id, updates, { new: true });
+        return user ? (user.toJSON() as IUser) : null;
+    }
+
+    /**
+     * Delete user (admin only)
+     */
+    async deleteUser(id: string): Promise<boolean> {
+        await connectDB();
+        const Expense = (await import('@/models/Expense')).default;
+        const Budget = (await import('@/models/Budget')).default;
+
+        await Promise.all([
+            Expense.deleteMany({ userId: id }),
+            Budget.deleteMany({ userId: id }),
+            User.findByIdAndDelete(id),
+        ]);
+        return true;
+    }
 }
 
 export default new UserRepository();

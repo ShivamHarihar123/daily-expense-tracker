@@ -36,8 +36,8 @@ export function generateInsights(expenses: IExpense[]): {
     const avgExpense = totalSpent / expenses.length;
     const topCategory = patterns.sort((a, b) => b.averageAmount - a.averageAmount)[0];
 
-    const summary = `You've spent $${totalSpent.toFixed(2)} across ${expenses.length} transactions. ` +
-        `Your average expense is $${avgExpense.toFixed(2)}. ` +
+    const summary = `You've spent ₹${totalSpent.toFixed(2)} across ${expenses.length} transactions. ` +
+        `Your average expense is ₹${avgExpense.toFixed(2)}. ` +
         `${topCategory ? `You spend most on ${topCategory.category}.` : ''}`;
 
     return {
@@ -114,7 +114,7 @@ function detectAnomalies(expenses: IExpense[]): {
     expenses.forEach((expense) => {
         if (expense.amount > avgAmount + 2 * stdDev) {
             anomalies.push({
-                description: `Unusually high ${expense.category} expense of $${expense.amount.toFixed(2)} on ${format(new Date(expense.date), 'MMM dd')}`,
+                description: `Unusually high ${expense.category} expense of ₹${expense.amount.toFixed(2)} on ${format(new Date(expense.date), 'MMM dd')}`,
                 severity: expense.amount > avgAmount + 3 * stdDev ? 'high' : 'medium',
             });
         }

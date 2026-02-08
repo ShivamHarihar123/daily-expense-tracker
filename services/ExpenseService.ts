@@ -132,7 +132,7 @@ export class ExpenseService {
                 const expenseData: IExpenseCreate = {
                     title: row.title || row.Title,
                     amount: parseFloat(row.amount || row.Amount),
-                    currency: row.currency || row.Currency || 'USD',
+                    currency: row.currency || row.Currency || 'INR',
                     category: row.category || row.Category,
                     date: new Date(row.date || row.Date),
                     notes: row.notes || row.Notes,

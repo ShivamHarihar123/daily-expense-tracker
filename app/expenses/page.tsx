@@ -185,7 +185,7 @@ function ExpenseListContent() {
                                 <div className={styles.expenseHeader}>
                                     <h3 className={styles.expenseTitle}>{expense.title}</h3>
                                     <span className={styles.expenseAmount}>
-                                        ${expense.amount.toFixed(2)}
+                                        ₹{expense.amount.toFixed(2)}
                                     </span>
                                 </div>
                                 <div className={styles.expenseDetails}>

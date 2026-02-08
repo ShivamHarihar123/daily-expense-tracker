@@ -108,7 +108,7 @@ function ExpenseDetailContent() {
                 <Card.Body>
                     <div className={styles.detailCard}>
                         <div className={styles.amount}>
-                            {expense.currency} ${expense.amount.toFixed(2)}
+                            {expense.currency} ₹{expense.amount.toFixed(2)}
                         </div>
                         <h1 className={styles.title}>{expense.title}</h1>
 

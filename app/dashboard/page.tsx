@@ -113,7 +113,7 @@ export default function DashboardPage() {
                             <div>
                                 <p className={styles.statLabel}>Total Spent</p>
                                 <h2 className={styles.statValue}>
-                                    {loading ? <Skeleton width={100} /> : `$${stats.totalAmount.toFixed(2)}`}
+                                    {loading ? <Skeleton width={100} /> : `₹${stats.totalAmount.toFixed(2)}`}
                                 </h2>
                             </div>
                         </div>
@@ -130,7 +130,7 @@ export default function DashboardPage() {
                                     {loading ? (
                                         <Skeleton width={100} />
                                     ) : stats.monthlyBudget > 0 ? (
-                                        `$${stats.monthlyBudget.toFixed(2)}`
+                                        `₹${stats.monthlyBudget.toFixed(2)}`
                                     ) : (
                                         'Not Set'
                                     )}

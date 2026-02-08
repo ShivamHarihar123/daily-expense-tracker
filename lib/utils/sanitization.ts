@@ -32,7 +32,7 @@ export function sanitizeInput(input: string): string {
  * Sanitize object with string values
  */
 export function sanitizeObject<T extends Record<string, any>>(obj: T): T {
-    const sanitized = { ...obj };
+    const sanitized = { ...obj } as Record<string, any>;
 
     Object.keys(sanitized).forEach((key) => {
         if (typeof sanitized[key] === 'string') {
@@ -42,7 +42,7 @@ export function sanitizeObject<T extends Record<string, any>>(obj: T): T {
         }
     });
 
-    return sanitized;
+    return sanitized as T;
 }
 
 /**

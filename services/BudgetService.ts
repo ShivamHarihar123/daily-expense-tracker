@@ -44,50 +44,56 @@ export class BudgetService {
      */
     async checkBudgetStatus(userId: string): Promise<{
         budget: IBudget | null;
-        currentSpending: number;
+        totalSpent: number;
         remainingBudget: number;
         percentageUsed: number;
-        alerts: string[];
+        alerts: Array<{ type: string; message: string }>;
+        categorySpending: Array<{ category: string; spent: number; limit: number; percentage: number }>;
     }> {
         const budget = await BudgetRepository.findByUserId(userId);
 
         if (!budget) {
             return {
                 budget: null,
-                currentSpending: 0,
+                totalSpent: 0,
                 remainingBudget: 0,
                 percentageUsed: 0,
                 alerts: [],
+                categorySpending: [],
             };
         }
 
         const startDate = startOfMonth(new Date());
         const endDate = endOfMonth(new Date());
 
-        const currentSpending = await ExpenseRepository.getTotalSpending(
+        const totalSpent = await ExpenseRepository.getTotalSpending(
             userId,
             startDate,
             endDate
         );
 
-        const remainingBudget = budget.monthlyLimit - currentSpending;
-        const percentageUsed = (currentSpending / budget.monthlyLimit) * 100;
+        const remainingBudget = budget.monthlyLimit - totalSpent;
+        const percentageUsed = (totalSpent / budget.monthlyLimit) * 100;
 
-        const alerts: string[] = [];
+        const alerts: Array<{ type: string; message: string }> = [];
 
         // Check if threshold exceeded
         if (percentageUsed >= budget.alertThreshold) {
-            alerts.push(
-                `You've used ${percentageUsed.toFixed(1)}% of your monthly budget!`
-            );
+            alerts.push({
+                type: percentageUsed >= 100 ? 'danger' : 'warning',
+                message: `You've used ${percentageUsed.toFixed(1)}% of your monthly budget!`,
+            });
         }
 
         // Check if budget exceeded
-        if (currentSpending > budget.monthlyLimit) {
-            alerts.push(
-                `You've exceeded your monthly budget by $${(currentSpending - budget.monthlyLimit).toFixed(2)}!`
-            );
+        if (totalSpent > budget.monthlyLimit) {
+            alerts.push({
+                type: 'danger',
+                message: `You've exceeded your monthly budget by ₹${(totalSpent - budget.monthlyLimit).toFixed(2)}!`,
+            });
         }
+
+        const categorySpendingResult: Array<{ category: string; spent: number; limit: number; percentage: number }> = [];
 
         // Check category limits
         if (budget.categoryLimits && budget.categoryLimits.length > 0) {
@@ -102,20 +108,32 @@ export class BudgetService {
                     (cs) => cs.category === categoryLimit.category
                 );
 
-                if (spending && spending.amount > categoryLimit.limit) {
-                    alerts.push(
-                        `${categoryLimit.category} spending ($${spending.amount.toFixed(2)}) exceeded limit ($${categoryLimit.limit.toFixed(2)})`
-                    );
+                const spent = spending ? spending.amount : 0;
+                const percentage = (spent / categoryLimit.limit) * 100;
+
+                categorySpendingResult.push({
+                    category: categoryLimit.category,
+                    spent: spent,
+                    limit: categoryLimit.limit,
+                    percentage: percentage,
+                });
+
+                if (spent > categoryLimit.limit) {
+                    alerts.push({
+                        type: 'danger',
+                        message: `${categoryLimit.category} spending (₹${spent.toFixed(2)}) exceeded limit (₹${categoryLimit.limit.toFixed(2)})`,
+                    });
                 }
             }
         }
 
         return {
             budget,
-            currentSpending,
+            totalSpent,
             remainingBudget,
             percentageUsed,
             alerts,
+            categorySpending: categorySpendingResult,
         };
     }
 }
