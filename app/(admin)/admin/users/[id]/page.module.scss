@@ -1,0 +1,324 @@
+@import '../../../../../styles/variables.scss';
+@import '../../../../../styles/mixins.scss';
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: $spacing-6;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-6;
+    margin-bottom: $spacing-8;
+}
+
+.backAction {
+    margin-bottom: $spacing-2;
+}
+
+.titleSection {
+    .title {
+        font-size: $font-size-3xl;
+        font-weight: $font-weight-bold;
+        color: $gray-900;
+        margin-bottom: $spacing-2;
+
+        [data-theme='dark'] & {
+            color: $dark-text;
+        }
+    }
+
+    .subtitle {
+        color: $gray-600;
+        font-size: $font-size-lg;
+
+        [data-theme='dark'] & {
+            color: $dark-text-secondary;
+        }
+    }
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-6;
+    margin-bottom: $spacing-8;
+}
+
+.statsCard {
+    background: white;
+    padding: $spacing-6;
+    border-radius: $radius-2xl;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all $transition-base;
+    border: 1px solid transparent;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-xl;
+        border-color: rgba($primary-500, 0.1);
+    }
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+    }
+}
+
+.statInfo {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+}
+
+.statLabel {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.statValue {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.statIcon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.progressBar {
+    width: 100%;
+    height: 8px;
+    background: $gray-100;
+    border-radius: $radius-full;
+    margin-top: $spacing-4;
+    overflow: hidden;
+
+    [data-theme='dark'] & {
+        background: $dark-surface-light;
+    }
+}
+
+.progressFill {
+    height: 100%;
+    border-radius: $radius-full;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.userProfileCard {
+    margin-bottom: $spacing-8;
+}
+
+.profileGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-6;
+}
+
+.profileItem {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    label {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+        color: $gray-500;
+
+        [data-theme='dark'] & {
+            color: $dark-text-secondary;
+        }
+    }
+
+    span {
+        font-size: $font-size-base;
+        color: $gray-900;
+        font-weight: $font-weight-medium;
+
+        [data-theme='dark'] & {
+            color: $dark-text;
+        }
+    }
+}
+
+.verified {
+    color: #10b981 !important;
+}
+
+.unverified {
+    color: #f59e0b !important;
+}
+
+.historyCard {
+    background: white;
+    border-radius: $radius-2xl;
+    overflow: hidden;
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+    }
+}
+
+.monthSelect {
+    padding: $spacing-2 $spacing-4;
+    border: 1px solid $gray-200;
+    border-radius: $radius-lg;
+    background-color: white;
+    color: $gray-700;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    outline: none;
+    transition: all $transition-fast;
+
+    &:focus {
+        border-color: $primary-500;
+        box-shadow: 0 0 0 3px rgba($primary-500, 0.1);
+    }
+
+    [data-theme='dark'] & {
+        background-color: $dark-surface-light;
+        border-color: $dark-border;
+        color: $dark-text-primary;
+
+        &:focus {
+            border-color: $primary-400;
+        }
+    }
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    width: 100%;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: $font-size-sm;
+
+        th {
+            background: $gray-50;
+            padding: $spacing-4;
+            text-align: left;
+            font-weight: $font-weight-semibold;
+            color: $gray-600;
+            border-bottom: 2px solid $gray-100;
+
+            [data-theme='dark'] & {
+                background: $dark-surface-light;
+                color: $dark-text;
+                border-bottom-color: $dark-border;
+            }
+        }
+
+        td {
+            padding: $spacing-4;
+            border-bottom: 1px solid $gray-50;
+            color: $gray-700;
+
+            [data-theme='dark'] & {
+                border-bottom-color: $dark-border;
+                color: $dark-text-secondary;
+            }
+        }
+
+        tr:hover td {
+            background: $gray-50;
+
+            [data-theme='dark'] & {
+                background: rgba($primary-600, 0.05);
+            }
+        }
+    }
+}
+
+.titleCol {
+    font-weight: $font-weight-medium;
+    color: $gray-900 !important;
+
+    [data-theme='dark'] & {
+        color: $dark-text !important;
+    }
+}
+
+.categoryBadge {
+    padding: $spacing-1 $spacing-3;
+    background: $primary-50;
+    color: $primary-600;
+    border-radius: $radius-full;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-xs;
+
+    [data-theme='dark'] & {
+        background: rgba($primary-600, 0.1);
+        color: $primary-400;
+    }
+}
+
+.amountCol {
+    font-weight: $font-weight-bold;
+    color: $gray-900 !important;
+
+    [data-theme='dark'] & {
+        color: $dark-text !important;
+    }
+}
+
+.emptyTable {
+    text-align: center;
+    padding: $spacing-12 !important;
+    color: $gray-500;
+    font-style: italic;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.loading {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-4;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid $gray-100;
+    border-top-color: $primary-500;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+
+    [data-theme='dark'] & {
+        border-color: $dark-border;
+        border-top-color: $primary-400;
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

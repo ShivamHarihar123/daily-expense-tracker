@@ -1,25 +1,30 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { loadEnvConfig } = require('@next/env');
+
+const projectDir = process.cwd();
+loadEnvConfig(projectDir);
 
 async function createAdmin() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/expense_tracker');
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense_tracker';
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@expensetracker.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
+        const adminName = 'Admin User';
+
+        await mongoose.connect(MONGODB_URI);
         console.log('✅ Connected to MongoDB');
 
-        const email = 'admin@expensetracker.com';
-        const password = 'Admin@123';
-        const name = 'Admin User';
-
         // Check if admin already exists
-        const existingUser = await mongoose.connection.db.collection('users').findOne({ email });
+        const existingUser = await mongoose.connection.db.collection('users').findOne({ email: adminEmail });
 
         if (existingUser) {
-            console.log('ℹ️  Admin user already exists');
+            console.log(`ℹ️  Admin user [${adminEmail}] already exists`);
 
             // Update password and ensure admin role
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
             await mongoose.connection.db.collection('users').updateOne(
-                { email },
+                { email: adminEmail },
                 {
                     $set: {
                         password: hashedPassword,
@@ -28,14 +33,14 @@ async function createAdmin() {
                     }
                 }
             );
-            console.log('✅ Admin password updated and role verified');
+            console.log('✅ Admin credentials updated and role verified');
         } else {
             // Create new admin user
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
             await mongoose.connection.db.collection('users').insertOne({
-                name,
-                email,
+                name: adminName,
+                email: adminEmail,
                 password: hashedPassword,
                 role: 'admin',
                 verified: true,
@@ -45,7 +50,7 @@ async function createAdmin() {
                 updatedAt: new Date(),
             });
 
-            console.log('✅ Admin user created successfully!');
+            console.log(`✅ Admin user [${adminEmail}] created successfully!`);
         }
 
         await mongoose.connection.close();

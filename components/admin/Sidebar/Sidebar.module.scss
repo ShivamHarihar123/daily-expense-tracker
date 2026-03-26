@@ -1,0 +1,141 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background: #1e293b; // Slate 800
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    left: 0;
+    transition: all $transition-base;
+    z-index: 1000;
+
+    [data-theme='dark'] & {
+        background: #0f172a; // Slate 900
+    }
+}
+
+.logoArea {
+    padding: $spacing-8 $spacing-6;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .logo {
+        @include flex-center;
+        gap: $spacing-3;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: white;
+
+        .icon {
+            font-size: 2rem;
+        }
+
+        .badge {
+            background: $primary-600;
+            font-size: $font-size-xs;
+            padding: 2px 8px;
+            border-radius: $radius-md;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.nav {
+    flex: 1;
+    padding: $spacing-6 $spacing-4;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+}
+
+.navItem {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-4;
+    padding: $spacing-3 $spacing-4;
+    color: #94a3b8; // Slate 400
+    text-decoration: none;
+    border-radius: $radius-lg;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    .icon {
+        font-size: 1.25rem;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+    }
+
+    &.active {
+        background: $primary-600;
+        color: white;
+        box-shadow: 0 4px 12px rgba($primary-600, 0.3);
+    }
+}
+
+.footer {
+    padding: $spacing-6;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+
+    .divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.05);
+        margin: $spacing-1 0;
+    }
+
+    .footerLink {
+        @include flex-center;
+        justify-content: flex-start;
+        gap: $spacing-3;
+        padding: $spacing-3;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: $font-size-sm;
+        border-radius: $radius-md;
+        transition: $transition-fast;
+
+        &:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    .exitBtn {
+        width: 100%;
+        @include flex-center;
+        gap: $spacing-3;
+        padding: $spacing-3;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: $radius-lg;
+        color: white;
+        cursor: pointer;
+        transition: all $transition-fast;
+        font-size: $font-size-sm;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &.logoutBtn {
+            color: $error-400;
+            border-color: rgba($error-500, 0.2);
+
+            &:hover {
+                background: rgba($error-500, 0.1);
+                border-color: rgba($error-500, 0.4);
+                color: $error-300;
+            }
+        }
+    }
+}

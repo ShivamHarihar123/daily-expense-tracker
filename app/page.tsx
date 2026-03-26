@@ -1,36 +1,79 @@
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+import Button from '@/components/ui/Button';
+import styles from './page.module.scss';
+
 export default function HomePage() {
-  return (
-    <div style={{ padding: '50px', textAlign: 'center' }}>
-      <h1 style={{ fontSize: '48px', marginBottom: '20px' }}>
-        Daily Expense Tracker
-      </h1>
-      <p style={{ fontSize: '20px', marginBottom: '30px' }}>
-        AI-Powered Expense Tracking Application
-      </p>
-      <div>
-        <a href="/signup" style={{
-          display: 'inline-block',
-          padding: '12px 24px',
-          background: '#6366f1',
-          color: 'white',
-          borderRadius: '8px',
-          marginRight: '10px',
-          textDecoration: 'none'
-        }}>
-          Get Started
-        </a>
-        <a href="/login" style={{
-          display: 'inline-block',
-          padding: '12px 24px',
-          background: 'transparent',
-          color: '#6366f1',
-          border: '2px solid #6366f1',
-          borderRadius: '8px',
-          textDecoration: 'none'
-        }}>
-          Sign In
-        </a>
-      </div>
-    </div>
-  );
+    return (
+        <div className={styles.container}>
+            {/* Background Blobs */}
+            <div className={`${styles.blob} ${styles.blob1}`} />
+            <div className={`${styles.blob} ${styles.blob2}`} />
+
+            {/* Hero Section */}
+            <header className={styles.hero}>
+                <div className={styles.heroContent}>
+                    <div className={styles.badge}>
+                        <span>✨</span>
+                        AI-Powered Financial Freedom
+                    </div>
+                    <h1 className={styles.title}>
+                        Master Your Money <br />
+                        <span>with </span>
+                        <span className={styles.highlight}>Precision.</span>
+                    </h1>
+                    <p className={styles.subtitle}>
+                        The most elegant way to track expenses, manage budgets, and visualize your financial health in real-time. Built for those who value clarity.
+                    </p>
+                    <div className={styles.actions}>
+                        <Link href="/signup">
+                            <Button size="lg" className={styles.cta}>
+                                Get Started Free
+                            </Button>
+                        </Link>
+                        <Link href="/login">
+                            <Button variant="outline" size="lg">
+                                Sign In
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+
+                <div className={styles.heroImage}>
+                    <div className={styles.preview}>
+                        <Image 
+                            src="/app_mockup_dashboard_high_quality_premium_glassmorphism_ui_design_4k_dark_theme_fintech_dashboard_interface_elegant_minimalist_png_1774516223999.png"
+                            alt="ExpenseTracker Dashboard Preview"
+                            width={1000}
+                            height={600}
+                            priority
+                        />
+                    </div>
+                </div>
+            </header>
+
+            {/* Features Section */}
+            <section className={styles.features}>
+                <div className={styles.featureGrid}>
+                    <div className={styles.featureCard}>
+                        <div className={styles.icon}>📱</div>
+                        <h3>Instant Tracking</h3>
+                        <p>Log your daily expenditures in seconds with a mobile-optimized interface designed for speed.</p>
+                    </div>
+                    <div className={styles.featureCard}>
+                        <div className={styles.icon}>🎯</div>
+                        <h3>Smart Budgets</h3>
+                        <p>Set monthly targets and let our AI calculate exactly how much you have left to spend safely.</p>
+                    </div>
+                    <div className={styles.featureCard}>
+                        <div className={styles.icon}>📊</div>
+                        <h3>Deep Analytics</h3>
+                        <p>Visualize your spending habits with beautiful, interactive charts that reveal and hidden patterns.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 }

@@ -3,6 +3,52 @@ import { adminAuthMiddleware } from '@/middleware/adminAuth';
 import UserRepository from '@/repositories/UserRepository';
 
 /**
+ * GET /api/admin/users/[id] - Get user details and history
+ */
+export async function GET(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        // Verify admin authentication
+        const authResult = await adminAuthMiddleware(request);
+        if (!authResult.authenticated) {
+            return authResult.response;
+        }
+
+        const user = await UserRepository.findById(params.id);
+        if (!user) {
+            return NextResponse.json(
+                { success: false, error: 'User not found' },
+                { status: 404 }
+            );
+        }
+
+        // Get expenses and budget
+        const Expense = (await import('@/models/Expense')).default;
+        const Budget = (await import('@/models/Budget')).default;
+
+        const [expenses, budget] = await Promise.all([
+            Expense.find({ userId: params.id, isDeleted: false }).sort({ date: -1 }),
+            Budget.findOne({ userId: params.id }),
+        ]);
+
+        return NextResponse.json({
+            success: true,
+            user,
+            expenses,
+            budget,
+        });
+    } catch (error: any) {
+        console.error('Get user history error:', error);
+        return NextResponse.json(
+            { success: false, error: error.message || 'Failed to fetch user history' },
+            { status: 500 }
+        );
+    }
+}
+
+/**
  * PATCH /api/admin/users/[id] - Update user
  */
 export async function PATCH(

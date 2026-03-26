@@ -1,0 +1,138 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid $gray-200;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    left: 0;
+    transition: all $transition-base;
+    z-index: 1000;
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        border-color: $dark-border;
+    }
+}
+
+.logoArea {
+    padding: $spacing-8 $spacing-6;
+    border-bottom: 1px solid $gray-100;
+
+    [data-theme='dark'] & {
+        border-color: $dark-border;
+    }
+
+    .logo {
+        @include flex-center;
+        justify-content: flex-start;
+        gap: $spacing-3;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $gray-900;
+        text-decoration: none;
+
+        [data-theme='dark'] & {
+            color: $dark-text;
+        }
+
+        .icon {
+            font-size: 2rem;
+        }
+    }
+}
+
+.nav {
+    flex: 1;
+    padding: $spacing-6 $spacing-4;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+}
+
+.navItem {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-4;
+    padding: $spacing-3 $spacing-4;
+    color: $gray-600;
+    text-decoration: none;
+    border-radius: $radius-lg;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    .icon {
+        font-size: 1.25rem;
+    }
+
+    &:hover {
+        background: $primary-50;
+        color: $primary-600;
+
+        [data-theme='dark'] & {
+            background: rgba($primary-600, 0.1);
+            color: $primary-400;
+        }
+    }
+
+    &.active {
+        background: $primary-600;
+        color: white;
+        box-shadow: 0 4px 12px rgba($primary-600, 0.3);
+
+        [data-theme='dark'] & {
+            background: $primary-600;
+            color: white;
+        }
+    }
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.footer {
+    padding: $spacing-6;
+    border-top: 1px solid $gray-100;
+
+    [data-theme='dark'] & {
+        border-color: $dark-border;
+    }
+
+    .logoutBtn {
+        width: 100%;
+        @include flex-center;
+        gap: $spacing-3;
+        padding: $spacing-3;
+        background: $gray-50;
+        border: 1px solid $gray-200;
+        border-radius: $radius-lg;
+        color: $gray-700;
+        cursor: pointer;
+        transition: all $transition-fast;
+        font-weight: $font-weight-medium;
+
+        &:hover {
+            background: $error-50;
+            border-color: $error-200;
+            color: $error-600;
+        }
+
+        [data-theme='dark'] & {
+            background: $dark-surface-light;
+            border-color: $dark-border;
+            color: $dark-text;
+
+            &:hover {
+                background: rgba($error-500, 0.1);
+                border-color: rgba($error-500, 0.3);
+                color: $error-400;
+            }
+        }
+    }
+}

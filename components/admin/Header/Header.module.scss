@@ -1,0 +1,98 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.header {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid $gray-200;
+    @include flex-between;
+    padding: 0 $spacing-8;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+
+    [data-theme='dark'] & {
+        background: $dark-surface;
+        border-color: $dark-border;
+    }
+}
+
+.left {
+    .pathBreadcrumb {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        color: $gray-500;
+        font-size: $font-size-sm;
+
+        [data-theme='dark'] & {
+            color: $dark-text-secondary;
+        }
+
+        .segment {
+            text-transform: capitalize;
+        }
+
+        .separator {
+            font-size: 1rem;
+        }
+
+        .active {
+            color: $primary-600;
+            font-weight: $font-weight-semibold;
+        }
+    }
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-6;
+
+    .userInfo {
+        display: flex;
+        align-items: center;
+        gap: $spacing-3;
+        padding: $spacing-2 $spacing-4;
+        background: $gray-50;
+        border-radius: $radius-lg;
+
+        [data-theme='dark'] & {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: $primary-600;
+            color: white;
+            @include flex-center;
+            border-radius: $radius-full;
+            font-weight: $font-weight-bold;
+            font-size: $font-size-xs;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+
+            .name {
+                font-weight: $font-weight-semibold;
+                font-size: $font-size-sm;
+                color: $gray-900;
+
+                [data-theme='dark'] & {
+                    color: $dark-text-primary;
+                }
+            }
+
+            .badge {
+                font-size: 10px;
+                color: $primary-600;
+                font-weight: $font-weight-bold;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+        }
+    }
+}

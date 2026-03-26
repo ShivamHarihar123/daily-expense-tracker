@@ -1,0 +1,18 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background: $gray-50;
+
+    [data-theme='dark'] & {
+        background: #0f172a; // Deep slate
+    }
+}
+
+.main {
+    flex: 1;
+    overflow-y: auto;
+    background: transparent;
+}

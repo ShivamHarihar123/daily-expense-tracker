@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import Button from '@/components/ui/Button';
 import styles from './Navbar.module.scss';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
     const router = useRouter();
@@ -47,6 +48,14 @@ export default function Navbar() {
             .slice(0, 2);
     };
 
+    // Hide navbar for admin and user application routes
+    const sidebarRoutes = ['/admin', '/dashboard', '/expenses', '/analytics', '/budgets', '/profile', '/settings'];
+    const isSidebarRoute = sidebarRoutes.some(route => pathname?.startsWith(route));
+
+    if (isSidebarRoute) {
+        return null;
+    }
+
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
@@ -85,13 +94,7 @@ export default function Navbar() {
                 )}
 
                 <div className={styles.actions}>
-                    <button
-                        className={styles.themeToggle}
-                        onClick={toggleTheme}
-                        aria-label="Toggle theme"
-                    >
-                        {theme === 'dark' ? '☀️' : '🌙'}
-                    </button>
+                    <ThemeToggle />
 
                     {isAuthenticated && user ? (
                         <div className={styles.userMenu} ref={dropdownRef}>

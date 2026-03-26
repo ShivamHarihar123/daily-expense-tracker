@@ -1,0 +1,31 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.themeToggle {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: $radius-full;
+    background: $gray-100;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    [data-theme='dark'] & {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &:hover {
+        background: $gray-200;
+        transform: scale(1.05);
+
+        [data-theme='dark'] & {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}

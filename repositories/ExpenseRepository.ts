@@ -266,6 +266,98 @@ export class ExpenseRepository {
         ]);
         return result.length > 0 ? result[0].total : 0;
     }
+
+    /**
+     * Get all expenses (admin only)
+     */
+    async getAllExpensesAdmin(
+        page: number = 1,
+        limit: number = 20,
+        search?: string,
+        category?: string
+    ): Promise<IPaginatedResponse<IExpense>> {
+        await connectDB();
+        const query: any = { isDeleted: false };
+
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { notes: { $regex: search, $options: 'i' } },
+            ];
+        }
+
+        if (category) {
+            query.category = category;
+        }
+
+        const skip = (page - 1) * limit;
+
+        const [expenses, total] = await Promise.all([
+            Expense.find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Expense.countDocuments(query),
+        ]);
+
+        // Manually fetch user data since userId is stored as a string without a direct ref
+        const userIds = [...new Set(expenses.map(e => e.userId))];
+        const User = (await import('@/models/User')).default;
+        const users = await User.find({ _id: { $in: userIds } }, 'name email').lean();
+        
+        const userMap = users.reduce((acc: any, user: any) => {
+            acc[user._id.toString()] = { _id: user._id.toString(), name: user.name, email: user.email };
+            return acc;
+        }, {});
+
+        const populatedExpenses = expenses.map(e => {
+            const exp = e.toJSON() as any;
+            if (userMap[exp.userId]) {
+                exp.userId = userMap[exp.userId];
+            }
+            return exp as IExpense;
+        });
+
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data: populatedExpenses,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems: total,
+                itemsPerPage: limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+            },
+        };
+    }
+
+    /**
+     * Update any expense (admin only)
+     */
+    async updateExpenseAdmin(id: string, updates: IExpenseUpdate): Promise<IExpense | null> {
+        await connectDB();
+        const expense = await Expense.findOneAndUpdate(
+            { _id: id, isDeleted: false },
+            updates,
+            { new: true }
+        );
+        return expense ? (expense.toJSON() as IExpense) : null;
+    }
+
+    /**
+     * Delete any expense (admin only)
+     */
+    async deleteExpenseAdmin(id: string): Promise<boolean> {
+        await connectDB();
+        const result = await Expense.findOneAndUpdate(
+            { _id: id },
+            { isDeleted: true },
+            { new: true }
+        );
+        return !!result;
+    }
 }
 
 export default new ExpenseRepository();

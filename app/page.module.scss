@@ -3,100 +3,209 @@
 
 .container {
     min-height: 100vh;
-    @include flex-column;
-    align-items: center;
-    justify-content: center;
-    padding: $spacing-6;
+    background-color: #0f172a; // Deep slate
+    background-image: 
+        radial-gradient(at 0% 0%, rgba($primary-600, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba($accent-teal-500, 0.1) 0px, transparent 50%);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(135deg, rgba($primary-600, 0.2), rgba($accent-teal-500, 0.1));
+    filter: blur(80px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: move 20s infinite alternate;
+
+    &.blob1 {
+        top: -100px;
+        right: -100px;
+    }
+
+    &.blob2 {
+        bottom: -200px;
+        left: -200px;
+        background: linear-gradient(135deg, rgba($accent-blue-500, 0.15), rgba($primary-400, 0.1));
+        animation-delay: -5s;
+    }
+}
+
+@keyframes move {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(50px, 50px) scale(1.1); }
 }
 
 .hero {
-    text-align: center;
-    max-width: 800px;
-    margin-bottom: $spacing-16;
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: $spacing-20 $spacing-6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-12;
+    min-height: calc(100vh - 80px);
+
+    @include md-down {
+        flex-direction: column;
+        padding-top: $spacing-12;
+        text-align: center;
+    }
+}
+
+.heroContent {
+    flex: 1;
+    max-width: 650px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    background: rgba($primary-600, 0.1);
+    border: 1px solid rgba($primary-400, 0.2);
+    border-radius: $radius-full;
+    color: $primary-400;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-6;
+    @include glass;
 }
 
 .title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: $font-weight-bold;
+    font-size: 4.5rem;
+    font-weight: 800;
     line-height: $line-height-tight;
     margin-bottom: $spacing-6;
-    color: $gray-900;
+    letter-spacing: -0.02em;
+    color: white;
 
-    [data-theme='dark'] & {
-        color: $dark-text;
+    span {
+        @include gradient-text;
+        background-image: linear-gradient(135deg, white 30%, $primary-300 100%);
+    }
+
+    .highlight {
+        @include gradient-text;
+        background-image: linear-gradient(135deg, $primary-400, $accent-teal-400);
+    }
+
+    @include md-down {
+        font-size: 3rem;
     }
 }
 
 .subtitle {
     font-size: $font-size-xl;
-    color: $gray-600;
-    margin-bottom: $spacing-8;
+    color: $dark-text-secondary;
     line-height: $line-height-relaxed;
+    margin-bottom: $spacing-10;
+    max-width: 580px;
 
-    [data-theme='dark'] & {
-        color: $dark-text-secondary;
+    @include md-down {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
-.cta {
-    @include flex-center;
+.actions {
+    display: flex;
     gap: $spacing-4;
-    flex-wrap: wrap;
+    align-items: center;
+
+    @include md-down {
+        justify-content: center;
+    }
+}
+
+.heroImage {
+    flex: 1;
+    position: relative;
+    @include flex-center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 120%;
+        height: 120%;
+        background: radial-gradient(circle, rgba($primary-600, 0.2) 0%, transparent 70%);
+        z-index: -1;
+    }
+}
+
+.preview {
+    @include glass;
+    border-radius: $radius-2xl;
+    padding: $spacing-4;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: $shadow-dark-lg;
+    transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+    transition: transform 0.5s $transition-base;
+
+    &:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+    }
+
+    img {
+        border-radius: $radius-xl;
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
 }
 
 .features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: $spacing-8;
-    max-width: 1200px;
-    width: 100%;
+    padding: $spacing-20 $spacing-6;
+    background: rgba(white, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.feature {
-    text-align: center;
-    padding: $spacing-6;
-    border-radius: $radius-xl;
-    background: white;
-    box-shadow: $shadow-md;
+.featureGrid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-8;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.featureCard {
+    padding: $spacing-8;
+    border-radius: $radius-2xl;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all $transition-base;
 
     &:hover {
-        transform: translateY(-4px);
-        box-shadow: $shadow-lg;
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba($primary-400, 0.3);
+        transform: translateY(-8px);
     }
 
-    [data-theme='dark'] & {
-        background: $dark-surface;
-        box-shadow: $shadow-dark-md;
-
-        &:hover {
-            box-shadow: $shadow-dark-lg;
-        }
+    .icon {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-6;
     }
 
     h3 {
         font-size: $font-size-xl;
-        font-weight: $font-weight-semibold;
-        margin: $spacing-4 0;
-        color: $gray-900;
-
-        [data-theme='dark'] & {
-            color: $dark-text;
-        }
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-4;
+        color: white;
     }
 
     p {
-        font-size: $font-size-base;
-        color: $gray-600;
-        margin: 0;
-
-        [data-theme='dark'] & {
-            color: $dark-text-secondary;
-        }
+        color: $dark-text-secondary;
+        line-height: $line-height-normal;
     }
-}
-
-.featureIcon {
-    font-size: 3rem;
-    line-height: 1;
 }

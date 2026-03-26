@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ExpenseService from '@/services/ExpenseService';
+import BudgetRepository from '@/repositories/BudgetRepository';
 import { authMiddleware } from '@/middleware/auth';
 import { validate } from '@/lib/utils/validation';
 import { createExpenseSchema, expenseFilterSchema, paginationSchema } from '@/lib/utils/validation';
@@ -34,18 +35,33 @@ export async function GET(request: NextRequest) {
         if (searchParams.get('search')) filters.search = searchParams.get('search');
         if (searchParams.get('tags')) filters.tags = searchParams.get('tags')!.split(',');
 
-        const result = await ExpenseService.getExpenses(
-            authResult.user!.userId,
-            filters,
-            page,
-            limit
-        );
+        const [result, totalFilteredSpending, budget] = await Promise.all([
+            ExpenseService.getExpenses(
+                authResult.user!.userId,
+                filters,
+                page,
+                limit
+            ),
+            ExpenseService.getTotalSpending(
+                authResult.user!.userId,
+                filters.startDate,
+                filters.endDate
+            ),
+            BudgetRepository.findByUserId(authResult.user!.userId),
+        ]);
+
+        const monthlyLimit = budget?.monthlyLimit || 0;
 
         return NextResponse.json({
             success: true,
-            expenses: result.data, // Rename 'data' to 'expenses' for frontend
+            expenses: result.data,
             pagination: result.pagination,
             totalPages: result.pagination.totalPages,
+            summary: {
+                totalSpent: totalFilteredSpending || 0,
+                monthlyBudget: monthlyLimit,
+                remaining: monthlyLimit - (totalFilteredSpending || 0),
+            }
         });
     } catch (error: any) {
         console.error('Get expenses error:', error);
