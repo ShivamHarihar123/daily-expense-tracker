@@ -86,33 +86,11 @@ export default function SignupPage() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.loginWrapper}>
-                {/* Left Side: Info */}
-                <div className={styles.infoSection}>
-                    <div className={styles.infoContent}>
-                        <div className={styles.projectLogo}>💰</div>
-                        <h1 className={styles.projectTitle}>Join the Community</h1>
-                        <p className={styles.projectTagline}>
-                            Start your journey toward financial clarity today.
-                        </p>
-                        
-                        <ul className={styles.featureList}>
-                            <li>
-                                <span className={styles.featureIcon}>🛡️</span>
-                                <div>
-                                    <strong>Secure & Private</strong>
-                                    <p>Your financial data is encrypted and protected.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <span className={styles.featureIcon}>📱</span>
-                                <div>
-                                    <strong>Universal Access</strong>
-                                    <p>Track your spending from any device, anywhere.</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+            <div className={`${styles.card} ${styles.signup}`}>
+                <div className={styles.header}>
+                    <div className={styles.logo}>💰</div>
+                    <h1 className={styles.title}>Create Account</h1>
+                    <p className={styles.subtitle}>Start tracking your expenses today</p>
                 </div>
 
                 {/* Right Side: Form */}
@@ -124,64 +102,69 @@ export default function SignupPage() {
                         {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
                         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
-                        <form onSubmit={handleSubmit} className={styles.form}>
-                            <Input
-                                type="text"
-                                name="name"
-                                label="Full Name"
-                                placeholder="John Doe"
-                                value={formData.name}
-                                onChange={handleChange}
-                                error={errors.name}
-                                required
-                            />
-                            <Input
-                                type="email"
-                                name="email"
-                                label="Email Address"
-                                placeholder="you@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                error={errors.email}
-                                required
-                            />
-                            <Input
-                                type="password"
-                                name="password"
-                                label="Password"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={handleChange}
-                                error={errors.password}
-                                required
-                            />
-                            <Input
-                                type="password"
-                                name="confirmPassword"
-                                label="Confirm Password"
-                                placeholder="••••••••"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                error={errors.confirmPassword}
-                                required
-                            />
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    <div className={styles.grid}>
+                        <Input
+                            type="text"
+                            name="name"
+                            label="Full Name"
+                            placeholder="John Doe"
+                            value={formData.name}
+                            onChange={handleChange}
+                            error={errors.name}
+                            required
+                        />
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                loading={loading}
-                                disabled={loading}
-                                size="lg"
-                            >
-                                Create Account
-                            </Button>
-                        </form>
-
-                        <div className={styles.signupPrompt}>
-                            Already have an account?{' '}
-                            <Link href="/login">Sign in</Link>
-                        </div>
+                        <Input
+                            type="email"
+                            name="email"
+                            label="Email Address"
+                            placeholder="you@example.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={errors.email}
+                            required
+                        />
                     </div>
+
+                    <div className={styles.grid}>
+                        <Input
+                            type="password"
+                            name="password"
+                            label="Password"
+                            placeholder="Strong password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            error={errors.password}
+                            helperText="Upper, lower, and number"
+                            required
+                        />
+
+                        <Input
+                            type="password"
+                            name="confirmPassword"
+                            label="Confirm Password"
+                            placeholder="Re-enter password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            error={errors.confirmPassword}
+                            required
+                        />
+                    </div>
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        loading={loading}
+                        disabled={loading}
+                    >
+                        Create Account
+                    </Button>
+                </form>
+
+                <div className={styles.footer}>
+                    Already have an account?{' '}
+                    <Link href="/login">Sign in</Link>
                 </div>
             </div>
         </div>
