@@ -10,18 +10,26 @@ export class BudgetService {
     /**
      * Get user budget
      */
-    async getBudget(userId: string): Promise<IBudget | null> {
-        return await BudgetRepository.findByUserId(userId);
+    async getBudget(userId: string, month: number, year: number): Promise<IBudget | null> {
+        return await BudgetRepository.findByUserId(userId, month, year);
+    }
+
+    /**
+     * Get all budgets for user
+     */
+    async getAllBudgets(userId: string): Promise<IBudget[]> {
+        return await BudgetRepository.findAllByUserId(userId);
     }
 
     /**
      * Create or update budget
      */
     async setBudget(userId: string, budgetData: IBudgetCreate): Promise<IBudget> {
-        const existingBudget = await BudgetRepository.findByUserId(userId);
+        const { month, year } = budgetData;
+        const existingBudget = await BudgetRepository.findByUserId(userId, month, year);
 
         if (existingBudget) {
-            const updated = await BudgetRepository.update(userId, budgetData);
+            const updated = await BudgetRepository.update(userId, month, year, budgetData);
             if (!updated) throw new Error('Failed to update budget');
             return updated;
         }
@@ -32,8 +40,8 @@ export class BudgetService {
     /**
      * Delete budget
      */
-    async deleteBudget(userId: string): Promise<void> {
-        const success = await BudgetRepository.delete(userId);
+    async deleteBudget(userId: string, month: number, year: number): Promise<void> {
+        const success = await BudgetRepository.delete(userId, month, year);
         if (!success) {
             throw new Error('Budget not found');
         }
@@ -42,7 +50,7 @@ export class BudgetService {
     /**
      * Check budget status and get alerts
      */
-    async checkBudgetStatus(userId: string): Promise<{
+    async checkBudgetStatus(userId: string, month?: number, year?: number): Promise<{
         budget: IBudget | null;
         totalSpent: number;
         remainingBudget: number;
@@ -50,7 +58,14 @@ export class BudgetService {
         alerts: Array<{ type: string; message: string }>;
         categorySpending: Array<{ category: string; spent: number; limit: number; percentage: number }>;
     }> {
-        const budget = await BudgetRepository.findByUserId(userId);
+        const targetDate = (month !== undefined && year !== undefined) 
+            ? new Date(year, month, 1) 
+            : new Date();
+        
+        const targetMonth = month !== undefined ? month : targetDate.getMonth();
+        const targetYear = year !== undefined ? year : targetDate.getFullYear();
+
+        const budget = await BudgetRepository.findByUserId(userId, targetMonth, targetYear);
 
         if (!budget) {
             return {
@@ -63,8 +78,8 @@ export class BudgetService {
             };
         }
 
-        const startDate = startOfMonth(new Date());
-        const endDate = endOfMonth(new Date());
+        const startDate = startOfMonth(targetDate);
+        const endDate = endOfMonth(targetDate);
 
         const totalSpent = await ExpenseRepository.getTotalSpending(
             userId,
@@ -81,7 +96,7 @@ export class BudgetService {
         if (percentageUsed >= budget.alertThreshold) {
             alerts.push({
                 type: percentageUsed >= 100 ? 'danger' : 'warning',
-                message: `You've used ${percentageUsed.toFixed(1)}% of your monthly budget!`,
+                message: `You've used ${percentageUsed.toFixed(1)}% of your budget for ${targetDate.toLocaleString('default', { month: 'long', year: 'numeric' })}!`,
             });
         }
 
@@ -89,7 +104,7 @@ export class BudgetService {
         if (totalSpent > budget.monthlyLimit) {
             alerts.push({
                 type: 'danger',
-                message: `You've exceeded your monthly budget by ₹${(totalSpent - budget.monthlyLimit).toFixed(2)}!`,
+                message: `You've exceeded your budget by ₹${(totalSpent - budget.monthlyLimit).toFixed(2)} for ${targetDate.toLocaleString('default', { month: 'long', year: 'numeric' })}!`,
             });
         }
 

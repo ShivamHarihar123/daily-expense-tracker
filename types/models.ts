@@ -99,6 +99,8 @@ export interface IExpenseFilter {
 export interface IBudget {
     _id: string;
     userId: string;
+    month: number; // 0-11
+    year: number;
     monthlyLimit: number;
     categoryLimits: {
         category: ExpenseCategory;
@@ -110,6 +112,8 @@ export interface IBudget {
 }
 
 export interface IBudgetCreate {
+    month: number;
+    year: number;
     monthlyLimit: number;
     categoryLimits?: {
         category: ExpenseCategory;

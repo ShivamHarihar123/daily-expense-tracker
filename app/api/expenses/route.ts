@@ -35,6 +35,19 @@ export async function GET(request: NextRequest) {
         if (searchParams.get('search')) filters.search = searchParams.get('search');
         if (searchParams.get('tags')) filters.tags = searchParams.get('tags')!.split(',');
 
+        // Extract month and year for budget lookup
+        const targetDate = filters.startDate || new Date();
+        const budgetMonth = targetDate.getMonth();
+        const budgetYear = targetDate.getFullYear();
+
+        // If user only provided a start date (single date filter), 
+        // expand it to cover the whole month for budget synchronization
+        if (filters.startDate && !searchParams.get('endDate')) {
+            const { startOfMonth, endOfMonth } = await import('date-fns');
+            filters.startDate = startOfMonth(filters.startDate);
+            filters.endDate = endOfMonth(filters.startDate);
+        }
+
         const [result, totalFilteredSpending, budget] = await Promise.all([
             ExpenseService.getExpenses(
                 authResult.user!.userId,
@@ -47,7 +60,7 @@ export async function GET(request: NextRequest) {
                 filters.startDate,
                 filters.endDate
             ),
-            BudgetRepository.findByUserId(authResult.user!.userId),
+            BudgetRepository.findByUserId(authResult.user!.userId, budgetMonth, budgetYear),
         ]);
 
         const monthlyLimit = budget?.monthlyLimit || 0;

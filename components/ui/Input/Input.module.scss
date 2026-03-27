@@ -59,6 +59,14 @@
         border-color: $dark-border;
         color: $dark-text;
 
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus {
+            -webkit-text-fill-color: $dark-text;
+            -webkit-box-shadow: 0 0 0px 1000px $dark-surface inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
         &:focus {
             border-color: $primary-400;
             box-shadow: 0 0 0 3px rgba($primary-400, 0.1);

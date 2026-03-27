@@ -15,7 +15,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body data-theme="dark">
-        <Navbar />
         {children}
       </body>
     </html>

@@ -2,13 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/authStore';
 import Card from '@/components/ui/Card/Card';
 import styles from './page.module.scss';
-import { IExpense } from '@/types/models';
 
-interface PaginatedExpenses {
-    data: (Omit<IExpense, 'userId'> & { userId: { _id: string; name: string; email: string } | string | null })[];
+interface UserSummary {
+    _id: string; // userId
+    totalSpent: number;
+    totalExpenses: number;
+    lastExpenseDate: string;
+    user: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+}
+
+interface PaginatedSummaries {
+    data: UserSummary[];
     pagination: {
         currentPage: number;
         totalPages: number;
@@ -21,22 +31,20 @@ interface PaginatedExpenses {
 
 export default function AdminExpensesPage() {
     const router = useRouter();
-    const [expenses, setExpenses] = useState<PaginatedExpenses | null>(null);
+    const [summaries, setSummaries] = useState<PaginatedSummaries | null>(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [category, setCategory] = useState('');
     const [page, setPage] = useState(1);
-    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchExpenses();
-    }, [page, category]);
+        fetchSummaries();
+    }, [page]);
 
     // Handle search with debounce
     useEffect(() => {
         const timeout = setTimeout(() => {
             if (page === 1) {
-                fetchExpenses();
+                fetchSummaries();
             } else {
                 setPage(1);
             }
@@ -45,64 +53,38 @@ export default function AdminExpensesPage() {
         return () => clearTimeout(timeout);
     }, [search]);
 
-    const fetchExpenses = async () => {
+    const fetchSummaries = async () => {
         try {
             setLoading(true);
             const query = new URLSearchParams({
                 page: page.toString(),
                 limit: '20',
+                grouped: 'true',
                 ...(search && { search }),
-                ...(category && { category }),
             });
 
             const response = await fetch(`/api/admin/expenses?${query}`);
             const data = await response.json();
 
             if (data.success) {
-                setExpenses({
+                setSummaries({
                     data: data.expenses,
                     pagination: data.pagination,
                 });
             }
         } catch (error) {
-            console.error('Failed to fetch expenses:', error);
+            console.error('Failed to fetch expense summaries:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this expense? This action cannot be undone.')) {
-            return;
-        }
-
-        try {
-            setDeletingId(id);
-            const response = await fetch(`/api/admin/expenses/${id}`, {
-                method: 'DELETE',
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                // Refresh data
-                fetchExpenses();
-            } else {
-                alert(data.error || 'Failed to delete expense');
-            }
-        } catch (error) {
-            console.error('Delete error:', error);
-            alert('Failed to delete expense');
-        } finally {
-            setDeletingId(null);
-        }
-    };
-
-    if (loading && !expenses) {
+    if (loading && !summaries) {
         return (
             <div className={styles.container}>
                 <div className={styles.loading}>
                     <div className={styles.spinner}></div>
-                    <p>Loading expenses...</p>
+                    <p>Loading expense summaries...</p>
                 </div>
             </div>
         );
@@ -115,83 +97,61 @@ export default function AdminExpensesPage() {
                     <span className={styles.searchIcon}>🔍</span>
                     <input
                         type="text"
-                        placeholder="Search by title or notes..."
+                        placeholder="Search by user name or email..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                </div>
-
-                <div className={styles.filterBox}>
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        <option value="">All Categories</option>
-                        <option value="Food & Dining">Food & Dining</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Bills & Utilities">Bills & Utilities</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Health & Fitness">Health & Fitness</option>
-                        <option value="Others">Others</option>
-                    </select>
                 </div>
             </div>
 
             <Card className={styles.tableCard}>
                 <div className={styles.tableWrapper}>
-                    {expenses?.data.length === 0 ? (
+                    {summaries?.data.length === 0 ? (
                         <div className={styles.empty}>
-                            <p>No expenses found.</p>
+                            <p>No user expense data found.</p>
                         </div>
                     ) : (
                         <table>
                             <thead>
                                 <tr>
                                     <th>User</th>
-                                    <th>Expense Title</th>
-                                    <th>Amount</th>
-                                    <th>Category</th>
-                                    <th>Date</th>
+                                    <th>Total Expenses</th>
+                                    <th>Total Spent</th>
+                                    <th>Last Activity</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {expenses?.data.map((expense) => (
-                                    <tr key={expense._id}>
+                                {summaries?.data.map((summary) => (
+                                    <tr key={summary._id}>
                                         <td className={styles.userCol}>
                                             <div className={styles.userInfo}>
                                                 <span className={styles.userName}>
-                                                    {typeof expense.userId === 'object' && expense.userId ? expense.userId.name : 'Unknown User'}
+                                                    {summary.user.name}
                                                 </span>
                                                 <span className={styles.userEmail}>
-                                                    {typeof expense.userId === 'object' && expense.userId ? expense.userId.email : (typeof expense.userId === 'string' ? `ID: ${expense.userId}` : 'N/A')}
+                                                    {summary.user.email}
                                                 </span>
                                             </div>
                                         </td>
-                                        <td>{expense.title}</td>
+                                        <td>
+                                            <span className={styles.expenseCount}>
+                                                {summary.totalExpenses} expenses
+                                            </span>
+                                        </td>
                                         <td className={styles.amount}>
-                                            ₹{expense.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                            ₹{summary.totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                         </td>
                                         <td>
-                                            <span className={styles.categoryBadge}>{expense.category}</span>
+                                            {new Date(summary.lastExpenseDate).toLocaleDateString()}
                                         </td>
-                                        <td>{new Date(expense.date).toLocaleDateString()}</td>
                                         <td className={styles.actions}>
                                             <button
                                                 className={styles.viewBtn}
-                                                onClick={() => router.push(`/admin/users/${typeof expense.userId === 'object' ? (expense.userId as any)._id : expense.userId}`)}
-                                                title="View User Details"
+                                                onClick={() => router.push(`/admin/users/${summary._id}`)}
+                                                title="View Historical Dossier"
                                             >
-                                                <span>👁️</span>
-                                            </button>
-                                            <button
-                                                className={styles.deleteBtn}
-                                                onClick={() => handleDelete(expense._id)}
-                                                disabled={deletingId === expense._id}
-                                                title="Delete Expense"
-                                            >
-                                                <span>🗑️</span>
+                                                <span>👁️ View Expenses</span>
                                             </button>
                                         </td>
                                     </tr>
@@ -201,10 +161,10 @@ export default function AdminExpensesPage() {
                     )}
                 </div>
 
-                {expenses && expenses.pagination.totalPages > 1 && (
+                {summaries && summaries.pagination.totalPages > 1 && (
                     <div className={styles.pagination}>
                         <div className={styles.info}>
-                            Showing {expenses.data.length} of {expenses.pagination.totalItems} expenses
+                            Showing {summaries.data.length} of {summaries.pagination.totalItems} users
                         </div>
                         <div className={styles.buttons}>
                             <button
@@ -214,8 +174,8 @@ export default function AdminExpensesPage() {
                                 Previous
                             </button>
                             <button
-                                onClick={() => setPage(p => Math.min(expenses.pagination.totalPages, p + 1))}
-                                disabled={page === expenses.pagination.totalPages}
+                                onClick={() => setPage(p => Math.min(summaries.pagination.totalPages, p + 1))}
+                                disabled={page === summaries.pagination.totalPages}
                             >
                                 Next
                             </button>

@@ -9,6 +9,25 @@
 
 .header {
     margin-bottom: $spacing-8;
+    @include flex-between;
+    align-items: flex-start;
+
+    @include md-down {
+        flex-direction: column;
+        gap: $spacing-4;
+    }
+}
+
+.periodSelectors {
+    display: flex;
+    gap: $spacing-3;
+    min-width: 300px;
+
+    @include sm-down {
+        flex-direction: column;
+        width: 100%;
+        min-width: unset;
+    }
 }
 
 .title {
@@ -31,51 +50,6 @@
     }
 }
 
-.filters {
-    @include flex-center;
-    gap: $spacing-3;
-    margin-bottom: $spacing-6;
-    flex-wrap: wrap;
-}
-
-.periodButton {
-    padding: $spacing-2 $spacing-4;
-    border-radius: $radius-lg;
-    background: white;
-    border: 2px solid $gray-300;
-    color: $gray-700;
-    font-weight: $font-weight-medium;
-    cursor: pointer;
-    transition: all $transition-fast;
-
-    &:hover {
-        border-color: $primary-500;
-        color: $primary-600;
-    }
-
-    &.active {
-        background: $primary-600;
-        border-color: $primary-600;
-        color: white;
-    }
-
-    [data-theme='dark'] & {
-        background: $dark-surface;
-        border-color: $dark-border;
-        color: $dark-text;
-
-        &:hover {
-            border-color: $primary-400;
-            color: $primary-400;
-        }
-
-        &.active {
-            background: $primary-600;
-            border-color: $primary-600;
-            color: white;
-        }
-    }
-}
 
 .statsGrid {
     display: grid;

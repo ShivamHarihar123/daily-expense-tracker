@@ -7,8 +7,17 @@ const BudgetSchema = new Schema<IBudget>(
         userId: {
             type: String,
             required: [true, 'User ID is required'],
-            unique: true,
             index: true,
+        },
+        month: {
+            type: Number,
+            required: [true, 'Month is required'],
+            min: [0, 'Month must be between 0 and 11'],
+            max: [11, 'Month must be between 0 and 11'],
+        },
+        year: {
+            type: Number,
+            required: [true, 'Year is required'],
         },
         monthlyLimit: {
             type: Number,
@@ -48,9 +57,14 @@ const BudgetSchema = new Schema<IBudget>(
     }
 );
 
-// Index for quick user budget lookup
-BudgetSchema.index({ userId: 1 }, { unique: true });
+// Index for quick user budget lookup for a specific month
+BudgetSchema.index({ userId: 1, month: 1, year: 1 }, { unique: true });
 
-const Budget: Model<IBudget> = mongoose.models.Budget || mongoose.model<IBudget>('Budget', BudgetSchema);
+// Clean up the model for HMR or force schema update
+if (mongoose.models.Budget) {
+    delete mongoose.models.Budget;
+}
+
+const Budget: Model<IBudget> = mongoose.model<IBudget>('Budget', BudgetSchema);
 
 export default Budget;

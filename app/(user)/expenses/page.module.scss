@@ -103,9 +103,14 @@
 
 .filterGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: $spacing-4;
-    margin-bottom: $spacing-4;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: $spacing-6;
+    margin-bottom: $spacing-6;
+    align-items: flex-end;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+    }
 }
 
 .filterActions {

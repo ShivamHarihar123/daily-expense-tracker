@@ -14,11 +14,17 @@ export async function GET(request: NextRequest) {
             return authResult.response;
         }
 
-        const budget = await BudgetService.getBudget(authResult.user!.userId);
+        const { searchParams } = new URL(request.url);
+        const month = parseInt(searchParams.get('month') || new Date().getMonth().toString());
+        const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString());
+
+        const budget = await BudgetService.getBudget(authResult.user!.userId, month, year);
+        const allBudgets = await BudgetService.getAllBudgets(authResult.user!.userId);
 
         return NextResponse.json({
             success: true,
             budget,
+            allBudgets,
         });
     } catch (error: any) {
         console.error('Get budget error:', error);
@@ -43,6 +49,11 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
+        
+        // Ensure month and year are numbers
+        if (body.month !== undefined) body.month = parseInt(body.month);
+        if (body.year !== undefined) body.year = parseInt(body.year);
+        
         const validatedData = validate(createBudgetSchema, body);
 
         const budget = await BudgetService.setBudget(
@@ -77,7 +88,11 @@ export async function DELETE(request: NextRequest) {
             return authResult.response;
         }
 
-        await BudgetService.deleteBudget(authResult.user!.userId);
+        const { searchParams } = new URL(request.url);
+        const month = parseInt(searchParams.get('month') || new Date().getMonth().toString());
+        const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString());
+
+        await BudgetService.deleteBudget(authResult.user!.userId, month, year);
 
         return NextResponse.json({
             success: true,

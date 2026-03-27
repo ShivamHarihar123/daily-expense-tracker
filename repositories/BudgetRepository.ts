@@ -7,12 +7,25 @@ import connectDB from '@/lib/db/mongoose';
  */
 export class BudgetRepository {
     /**
-     * Find budget by user ID
+     * Find budget by user ID and period
      */
-    async findByUserId(userId: string): Promise<IBudget | null> {
+    async findByUserId(userId: string, month: number, year: number): Promise<IBudget | null> {
         await connectDB();
-        const budget = await Budget.findOne({ userId });
+        const budget = await Budget.findOne({ userId, month, year });
         return budget ? (budget.toJSON() as IBudget) : null;
+    }
+
+    /**
+     * Find all budgets for a user
+     */
+    async findAllByUserId(userId: string): Promise<IBudget[]> {
+        await connectDB();
+        const budgets = await Budget.find({ 
+            userId, 
+            month: { $exists: true }, 
+            year: { $exists: true } 
+        }).sort({ year: -1, month: -1 });
+        return budgets.map(b => b.toJSON() as IBudget);
     }
 
     /**
@@ -27,10 +40,10 @@ export class BudgetRepository {
     /**
      * Update budget
      */
-    async update(userId: string, updates: Partial<IBudgetCreate>): Promise<IBudget | null> {
+    async update(userId: string, month: number, year: number, updates: Partial<IBudgetCreate>): Promise<IBudget | null> {
         await connectDB();
         const budget = await Budget.findOneAndUpdate(
-            { userId },
+            { userId, month, year },
             updates,
             { new: true, upsert: true }
         );
@@ -40,9 +53,9 @@ export class BudgetRepository {
     /**
      * Delete budget
      */
-    async delete(userId: string): Promise<boolean> {
+    async delete(userId: string, month: number, year: number): Promise<boolean> {
         await connectDB();
-        const result = await Budget.findOneAndDelete({ userId });
+        const result = await Budget.findOneAndDelete({ userId, month, year });
         return !!result;
     }
 

@@ -115,13 +115,6 @@ function ProfileContent() {
                         <span>👤</span>
                         Profile
                     </button>
-                    <button
-                        className={`${styles.tabButton} ${activeTab === 'security' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('security')}
-                    >
-                        <span>🔒</span>
-                        Security
-                    </button>
                 </div>
 
                 <div className={styles.content}>
@@ -134,9 +127,6 @@ function ProfileContent() {
                                     <div className={styles.avatarInfo}>
                                         <h3>{user?.name}</h3>
                                         <p>{user?.email}</p>
-                                        <Button variant="outline" size="sm">
-                                            Change Avatar
-                                        </Button>
                                     </div>
                                 </div>
 
@@ -166,61 +156,6 @@ function ProfileContent() {
                         </Card>
                     )}
 
-                    {activeTab === 'security' && (
-                        <Card>
-                            <Card.Header title="Change Password" />
-                            <Card.Body>
-                                <form onSubmit={handlePasswordChange} className={styles.form}>
-                                    <Input
-                                        type="password"
-                                        label="Current Password"
-                                        value={passwordData.currentPassword}
-                                        onChange={(e) =>
-                                            setPasswordData({ ...passwordData, currentPassword: e.target.value })
-                                        }
-                                        required
-                                    />
-                                    <Input
-                                        type="password"
-                                        label="New Password"
-                                        value={passwordData.newPassword}
-                                        onChange={(e) =>
-                                            setPasswordData({ ...passwordData, newPassword: e.target.value })
-                                        }
-                                        error={errors.newPassword}
-                                        helperText="Must be at least 6 characters"
-                                        required
-                                    />
-                                    <Input
-                                        type="password"
-                                        label="Confirm New Password"
-                                        value={passwordData.confirmPassword}
-                                        onChange={(e) =>
-                                            setPasswordData({ ...passwordData, confirmPassword: e.target.value })
-                                        }
-                                        error={errors.confirmPassword}
-                                        required
-                                    />
-
-                                    <div className={styles.actions}>
-                                        <Button type="submit" loading={saving}>
-                                            Change Password
-                                        </Button>
-                                    </div>
-                                </form>
-
-                                <div className={styles.dangerZone}>
-                                    <h3 className={styles.dangerTitle}>Danger Zone</h3>
-                                    <p className={styles.dangerText}>
-                                        Once you delete your account, there is no going back. Please be certain.
-                                    </p>
-                                    <Button variant="danger" onClick={() => setDeleteModalOpen(true)}>
-                                        Delete Account
-                                    </Button>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    )}
 
                 </div>
             </div>
