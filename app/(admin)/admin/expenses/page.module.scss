@@ -223,46 +223,44 @@
     gap: $spacing-2;
 
     .viewBtn {
-        padding: $spacing-2;
-        background: transparent;
-        color: $primary-500;
+        padding: $spacing-2 $spacing-4;
+        background: $primary-600;
+        color: white;
         border: none;
         border-radius: $radius-md;
         cursor: pointer;
         transition: all $transition-fast;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
 
         &:hover {
-            background: $primary-50;
-            color: $primary-700;
+            background: $primary-700;
+            transform: translateY(-1px);
         }
 
         [data-theme='dark'] & {
-            color: $primary-400;
+            background: $primary-500;
             &:hover {
-                background: rgba($primary-500, 0.1);
+                background: $primary-400;
             }
         }
     }
+}
 
-    .deleteBtn {
-        padding: $spacing-2;
-        background: transparent;
-        color: $gray-400;
-        border: none;
-        border-radius: $radius-md;
-        cursor: pointer;
-        transition: all $transition-fast;
+.expenseCount {
+    background: $gray-100;
+    color: $gray-700;
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-full;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
 
-        &:hover {
-            background: $error-50;
-            color: $error-500;
-        }
-
-        [data-theme='dark'] & {
-            &:hover {
-                background: rgba($error-500, 0.1);
-            }
-        }
+    [data-theme='dark'] & {
+        background: $dark-border;
+        color: $dark-text-secondary;
     }
 }
 

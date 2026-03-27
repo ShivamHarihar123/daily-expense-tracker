@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import styles from '../auth.module.scss';
+import styles from '../login/login.module.scss'; // Reuse login styles for consistency
 
 export default function SignupPage() {
     const router = useRouter();
@@ -26,7 +26,6 @@ export default function SignupPage() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error for this field
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
@@ -34,33 +33,20 @@ export default function SignupPage() {
 
     const validate = () => {
         const newErrors: Record<string, string> = {};
-
-        if (!formData.name) {
-            newErrors.name = 'Name is required';
-        } else if (formData.name.length < 2) {
-            newErrors.name = 'Name must be at least 2 characters';
-        }
-
+        if (!formData.name) newErrors.name = 'Name is required';
         if (!formData.email) {
             newErrors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Email is invalid';
         }
-
         if (!formData.password) {
             newErrors.password = 'Password is required';
         } else if (formData.password.length < 6) {
             newErrors.password = 'Password must be at least 6 characters';
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-            newErrors.password = 'Password must contain uppercase, lowercase, and number';
         }
-
-        if (!formData.confirmPassword) {
-            newErrors.confirmPassword = 'Please confirm your password';
-        } else if (formData.password !== formData.confirmPassword) {
+        if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match';
         }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -69,9 +55,7 @@ export default function SignupPage() {
         e.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
-
         if (!validate()) return;
-
         setLoading(true);
 
         try {
@@ -84,15 +68,11 @@ export default function SignupPage() {
                     password: formData.password,
                 }),
             });
-
             const data = await response.json();
-
             if (response.ok) {
-                setSuccessMessage('Account created successfully! Redirecting to dashboard...');
+                setSuccessMessage('Account created successfully!');
                 setUser(data.user);
-                setTimeout(() => {
-                    router.push('/dashboard');
-                }, 1500);
+                setTimeout(() => router.push('/dashboard'), 1000);
             } else {
                 setErrorMessage(data.error || 'Signup failed. Please try again.');
             }
@@ -104,11 +84,6 @@ export default function SignupPage() {
         }
     };
 
-    const handleGoogleSignup = () => {
-        // TODO: Implement Google OAuth
-        console.log('Google OAuth not yet implemented');
-    };
-
     return (
         <div className={styles.container}>
             <div className={`${styles.card} ${styles.signup}`}>
@@ -118,13 +93,14 @@ export default function SignupPage() {
                     <p className={styles.subtitle}>Start tracking your expenses today</p>
                 </div>
 
-                {errorMessage && (
-                    <div className={styles.error}>{errorMessage}</div>
-                )}
+                {/* Right Side: Form */}
+                <div className={styles.formSection}>
+                    <div className={styles.formContent}>
+                    <div className={styles.mobileLogo}>💰</div>
+                    <h2 className={styles.title}>Create Account</h2>
 
-                {successMessage && (
-                    <div className={styles.success}>{successMessage}</div>
-                )}
+                        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+                        {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.grid}>

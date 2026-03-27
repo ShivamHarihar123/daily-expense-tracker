@@ -28,11 +28,13 @@ function ExpenseListContent() {
     const pathname = usePathname();
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [loading, setLoading] = useState(true);
+    
+    // New month/year state for consistent selection
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    
     const [filters, setFilters] = useState({
         search: '',
-        category: '',
-        startDate: '',
-        endDate: '',
     });
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -44,18 +46,19 @@ function ExpenseListContent() {
 
     useEffect(() => {
         fetchExpenses();
-    }, [page, filters, pathname]);
+    }, [page, filters.search, selectedMonth, selectedYear, pathname]);
 
     const fetchExpenses = async () => {
         setLoading(true);
         try {
+            // Construct startDate as the first day of the selected month
+            const startDate = new Date(selectedYear, selectedMonth, 1).toISOString();
+            
             const params = new URLSearchParams({
                 page: page.toString(),
                 limit: '10',
+                startDate,
                 ...(filters.search && { search: filters.search }),
-                ...(filters.category && { category: filters.category }),
-                ...(filters.startDate && { startDate: filters.startDate }),
-                ...(filters.endDate && { endDate: filters.endDate }),
             });
 
             const response = await fetch(`/api/expenses?${params}`);
@@ -74,28 +77,23 @@ function ExpenseListContent() {
         }
     };
 
-    const handleFilterChange = (name: string, value: string) => {
-        setFilters((prev) => ({ ...prev, [name]: value }));
+    const handleSearchChange = (value: string) => {
+        setFilters({ search: value });
         setPage(1);
     };
 
     const clearFilters = () => {
-        setFilters({
-            search: '',
-            category: '',
-            startDate: '',
-            endDate: '',
-        });
+        setFilters({ search: '' });
+        setSelectedMonth(new Date().getMonth());
+        setSelectedYear(new Date().getFullYear());
         setPage(1);
     };
 
-    const categoryOptions = [
-        { value: '', label: 'All Categories' },
-        ...Object.values(ExpenseCategory).map((cat) => ({
-            value: cat,
-            label: cat,
-        })),
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
     ];
+    const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i);
 
     return (
         <div className={styles.container}>
@@ -103,17 +101,10 @@ function ExpenseListContent() {
                 <div>
                     <h1 className={styles.title}>Expenses</h1>
                     <p className={styles.periodLabel}>
-                        {filters.startDate ? (
-                            `Period: ${format(new Date(filters.startDate), 'MMM dd, yyyy')} - ${filters.endDate ? format(new Date(filters.endDate), 'MMM dd, yyyy') : 'Now'}`
-                        ) : (
-                            `All Time Summary`
-                        )}
+                        Budget Period: {months[selectedMonth]} {selectedYear}
                     </p>
                 </div>
                 <div className={styles.actions}>
-                    <Button variant="outline" onClick={() => router.push('/expenses/import')}>
-                        📥 Import CSV
-                    </Button>
                     <Button onClick={() => router.push('/expenses/new')}>
                         + Add Expense
                     </Button>
@@ -140,26 +131,28 @@ function ExpenseListContent() {
                 <div className={styles.filterGrid}>
                     <Input
                         type="text"
+                        label="Search"
                         placeholder="Search expenses..."
                         value={filters.search}
-                        onChange={(e) => handleFilterChange('search', e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                     />
                     <Select
-                        value={filters.category}
-                        onChange={(e) => handleFilterChange('category', e.target.value)}
-                        options={categoryOptions}
+                        label="Month"
+                        value={selectedMonth.toString()}
+                        onChange={(e) => {
+                            setSelectedMonth(parseInt(e.target.value));
+                            setPage(1);
+                        }}
+                        options={months.map((m, i) => ({ value: i.toString(), label: m }))}
                     />
-                    <Input
-                        type="date"
-                        placeholder="Start Date"
-                        value={filters.startDate}
-                        onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                    />
-                    <Input
-                        type="date"
-                        placeholder="End Date"
-                        value={filters.endDate}
-                        onChange={(e) => handleFilterChange('endDate', e.target.value)}
+                    <Select
+                        label="Year"
+                        value={selectedYear.toString()}
+                        onChange={(e) => {
+                            setSelectedYear(parseInt(e.target.value));
+                            setPage(1);
+                        }}
+                        options={years.map((y) => ({ value: y.toString(), label: y.toString() }))}
                     />
                 </div>
                 <div className={styles.filterActions}>
@@ -167,7 +160,7 @@ function ExpenseListContent() {
                         Clear Filters
                     </Button>
                     <Button variant="outline" size="sm" onClick={fetchExpenses}>
-                        Apply Filters
+                        Refresh
                     </Button>
                 </div>
             </div>
@@ -181,7 +174,7 @@ function ExpenseListContent() {
             ) : expenses.length === 0 ? (
                 <div className={styles.empty}>
                     <div className={styles.emptyIcon}>💰</div>
-                    <h3>No expenses found</h3>
+                    <h3>No expenses found for {months[selectedMonth]} {selectedYear}</h3>
                     <p>Start tracking your expenses by adding your first one!</p>
                 </div>
             ) : (

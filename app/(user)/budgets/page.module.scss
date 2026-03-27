@@ -9,6 +9,25 @@
 
 .header {
     margin-bottom: $spacing-8;
+    @include flex-between;
+    align-items: flex-start;
+
+    @include md-down {
+        flex-direction: column;
+        gap: $spacing-4;
+    }
+}
+
+.periodSelectors {
+    display: flex;
+    gap: $spacing-3;
+    min-width: 300px;
+
+    @include sm-down {
+        flex-direction: column;
+        width: 100%;
+        min-width: unset;
+    }
 }
 
 .title {
@@ -241,6 +260,87 @@
     @include flex-center;
     gap: $spacing-3;
     margin-top: $spacing-6;
+}
+
+.mainLayout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: $spacing-8;
+
+    @include lg-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.budgetSidebar {
+    @include flex-column;
+    gap: $spacing-6;
+}
+
+.historyList {
+    @include flex-column;
+    gap: $spacing-3;
+}
+
+.historyItem {
+    padding: $spacing-4;
+    border-radius: $radius-lg;
+    background: lighten($gray-50, 2%);
+    cursor: pointer;
+    transition: $transition-base;
+    border: 1px solid transparent;
+
+    [data-theme='dark'] & {
+        background: $dark-surface-light;
+    }
+
+    &:hover {
+        background: $gray-100;
+        transform: translateY(-2px);
+
+        [data-theme='dark'] & {
+            background: lighten($dark-surface-light, 5%);
+        }
+    }
+
+    &.active {
+        border-color: $primary-500;
+        background: rgba($primary-500, 0.05);
+
+        .historyDate {
+            color: $primary-600;
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+.historyInfo {
+    @include flex-between;
+}
+
+.historyDate {
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+
+    [data-theme='dark'] & {
+        color: $dark-text;
+    }
+}
+
+.historyLimit {
+    color: $gray-600;
+    font-size: $font-size-sm;
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+    }
+}
+
+.noHistory {
+    text-align: center;
+    color: $gray-500;
+    font-style: italic;
+    padding: $spacing-4 0;
 }
 
 .empty {

@@ -30,7 +30,11 @@ export async function GET(
 
         const [expenses, budget] = await Promise.all([
             Expense.find({ userId: params.id, isDeleted: false }).sort({ date: -1 }),
-            Budget.findOne({ userId: params.id }),
+            Budget.findOne({ 
+                userId: params.id, 
+                month: new Date().getMonth(), 
+                year: new Date().getFullYear() 
+            }),
         ]);
 
         return NextResponse.json({

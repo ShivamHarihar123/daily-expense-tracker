@@ -12,7 +12,11 @@ export async function GET(request: NextRequest) {
             return authResult.response;
         }
 
-        const status = await BudgetService.checkBudgetStatus(authResult.user!.userId);
+        const { searchParams } = new URL(request.url);
+        const month = searchParams.get('month') ? parseInt(searchParams.get('month')!) : undefined;
+        const year = searchParams.get('year') ? parseInt(searchParams.get('year')!) : undefined;
+
+        const status = await BudgetService.checkBudgetStatus(authResult.user!.userId, month, year);
 
         return NextResponse.json({
             success: true,

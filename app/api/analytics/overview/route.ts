@@ -14,32 +14,33 @@ export async function GET(request: NextRequest) {
         }
 
         const { searchParams } = new URL(request.url);
-        const period = searchParams.get('period') || 'month'; // day, week, month, year
+        const period = searchParams.get('period') || 'month'; 
+        const month = searchParams.get('month') ? parseInt(searchParams.get('month')!) : new Date().getMonth();
+        const year = searchParams.get('year') ? parseInt(searchParams.get('year')!) : new Date().getFullYear();
 
         let startDate: Date;
-        let endDate: Date = new Date();
+        let endDate: Date;
 
         switch (period) {
             case 'day':
                 startDate = new Date();
                 startDate.setHours(0, 0, 0, 0);
+                endDate = new Date();
                 endDate.setHours(23, 59, 59, 999);
                 break;
             case 'week':
                 startDate = new Date();
                 startDate.setDate(startDate.getDate() - 7);
-                break;
-            case 'month':
-                startDate = startOfMonth(new Date());
-                endDate = endOfMonth(new Date());
+                endDate = new Date();
                 break;
             case 'year':
-                startDate = startOfYear(new Date());
-                endDate = endOfYear(new Date());
+                startDate = startOfYear(new Date(year, 0, 1));
+                endDate = endOfYear(new Date(year, 11, 31));
                 break;
+            case 'month':
             default:
-                startDate = startOfMonth(new Date());
-                endDate = endOfMonth(new Date());
+                startDate = startOfMonth(new Date(year, month, 1));
+                endDate = endOfMonth(new Date(year, month, 1));
         }
 
         const userId = authResult.user!.userId;

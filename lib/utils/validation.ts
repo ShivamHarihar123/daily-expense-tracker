@@ -74,6 +74,8 @@ export const expenseFilterSchema = z.object({
 // ========================
 
 export const createBudgetSchema = z.object({
+    month: z.number().int().min(0).max(11, 'Month must be between 0 and 11'),
+    year: z.number().int().min(2000, 'Year must be valid'),
     monthlyLimit: z.number().positive('Monthly limit must be positive'),
     categoryLimits: z
         .array(

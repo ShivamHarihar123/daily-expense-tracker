@@ -5,12 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { Select } from '@/components/ui/Input';
 import Skeleton from '@/components/ui/Skeleton';
 import styles from './page.module.scss';
 
 export default function DashboardPage() {
     const router = useRouter();
     const { user, isAuthenticated, isLoading } = useAuth();
+    
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    
     const [stats, setStats] = useState({
         totalExpenses: 0,
         totalAmount: 0,
@@ -19,48 +24,55 @@ export default function DashboardPage() {
     });
     const [loading, setLoading] = useState(true);
 
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i);
+
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
             router.push('/login');
         }
     }, [isLoading, isAuthenticated, router]);
 
-    useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                const [analyticsRes, budgetRes] = await Promise.all([
-                    fetch('/api/analytics/overview?period=month'),
-                    fetch('/api/budgets/status'),
-                ]);
+    const fetchDashboardData = async () => {
+        setLoading(true);
+        try {
+            const [analyticsRes, budgetRes] = await Promise.all([
+                fetch(`/api/analytics/overview?period=month&month=${selectedMonth}&year=${selectedYear}`),
+                fetch(`/api/budgets/status?month=${selectedMonth}&year=${selectedYear}`),
+            ]);
 
-                if (analyticsRes.ok) {
-                    const analyticsData = await analyticsRes.json();
-                    setStats((prev) => ({
-                        ...prev,
-                        totalExpenses: analyticsData.analytics.totalExpenses,
-                        totalAmount: analyticsData.analytics.totalAmount,
-                    }));
-                }
-
-                if (budgetRes.ok) {
-                    const budgetData = await budgetRes.json();
-                    setStats((prev) => ({
-                        ...prev,
-                        monthlyBudget: budgetData.budget?.monthlyLimit || 0,
-                        budgetUsed: budgetData.percentageUsed || 0,
-                    }));
-                }
-            } catch (error) {
-                console.error('Failed to fetch dashboard data:', error);
-            } finally {
-                setLoading(false);
+            if (analyticsRes.ok) {
+                const analyticsData = await analyticsRes.json();
+                setStats((prev) => ({
+                    ...prev,
+                    totalExpenses: analyticsData.analytics.totalExpenses,
+                    totalAmount: analyticsData.analytics.totalAmount,
+                }));
             }
-        };
 
+            if (budgetRes.ok) {
+                const budgetData = await budgetRes.json();
+                setStats((prev) => ({
+                    ...prev,
+                    monthlyBudget: budgetData.budget?.monthlyLimit || 0,
+                    budgetUsed: budgetData.percentageUsed || 0,
+                }));
+            }
+        } catch (error) {
+            console.error('Failed to fetch dashboard data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (isAuthenticated) {
             fetchDashboardData();
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, selectedMonth, selectedYear]);
 
     if (isLoading) {
         return (
@@ -84,11 +96,25 @@ export default function DashboardPage() {
             <div className={styles.header}>
                 <div>
                     <h1 className={styles.title}>Welcome back, {user?.name}! 👋</h1>
-                    <p className={styles.subtitle}>Here's your financial overview for this month</p>
+                    <p className={styles.subtitle}>
+                        Overview for {months[selectedMonth]} {selectedYear}
+                    </p>
                 </div>
-                <Button onClick={() => router.push('/expenses/new')}>
-                    + Add Expense
-                </Button>
+                <div className={styles.periodSelectors}>
+                    <Select
+                        value={selectedMonth.toString()}
+                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                        options={months.map((m, i) => ({ value: i.toString(), label: m }))}
+                    />
+                    <Select
+                        value={selectedYear.toString()}
+                        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                        options={years.map((y) => ({ value: y.toString(), label: y.toString() }))}
+                    />
+                    <Button onClick={() => router.push('/expenses/new')}>
+                        + Add Expense
+                    </Button>
+                </div>
             </div>
 
             <div className={styles.statsGrid}>

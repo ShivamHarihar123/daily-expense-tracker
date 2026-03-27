@@ -15,8 +15,14 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '20');
         const search = searchParams.get('search') || undefined;
         const category = searchParams.get('category') || undefined;
+        const grouped = searchParams.get('grouped') === 'true';
 
-        const result = await ExpenseRepository.getAllExpensesAdmin(page, limit, search, category);
+        let result;
+        if (grouped) {
+            result = await ExpenseRepository.getUserExpenseSummaries(page, limit, search);
+        } else {
+            result = await ExpenseRepository.getAllExpensesAdmin(page, limit, search, category);
+        }
 
         return NextResponse.json({
             success: true,

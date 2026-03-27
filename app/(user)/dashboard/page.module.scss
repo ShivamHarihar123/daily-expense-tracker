@@ -10,8 +10,35 @@
 .header {
     @include flex-between;
     margin-bottom: $spacing-8;
-    flex-wrap: wrap;
-    gap: $spacing-4;
+    gap: $spacing-6;
+    align-items: center;
+
+    @include md-down {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.periodSelectors {
+    display: flex;
+    gap: $spacing-3;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    // Remove margin-bottom from Input/Select wrappers
+    & > div {
+        margin-bottom: 0 !important;
+    }
+
+    @include sm-down {
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+        
+        & > div {
+            margin-bottom: $spacing-3 !important;
+        }
+    }
 }
 
 .title {

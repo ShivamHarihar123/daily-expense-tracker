@@ -1,13 +1,13 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
+import Navbar from '@/components/layout/Navbar/Navbar';
 import Button from '@/components/ui/Button';
 import styles from './page.module.scss';
 
 export default function HomePage() {
     return (
         <div className={styles.container}>
+            <Navbar />
             {/* Background Blobs */}
             <div className={`${styles.blob} ${styles.blob1}`} />
             <div className={`${styles.blob} ${styles.blob2}`} />

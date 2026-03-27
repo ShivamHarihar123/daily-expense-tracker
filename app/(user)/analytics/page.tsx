@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { Select } from '@/components/ui/Input';
 import Skeleton from '@/components/ui/Skeleton';
 import {
     PieChart,
@@ -42,7 +43,11 @@ interface AIInsight {
 
 function AnalyticsContent() {
     const router = useRouter();
-    const [period, setPeriod] = useState<'week' | 'month' | 'year'>('month');
+    
+    // Switch to month/year state
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    
     const [analytics, setAnalytics] = useState<Analytics | null>(null);
     const [insights, setInsights] = useState<AIInsight[]>([]);
     const [loading, setLoading] = useState(true);
@@ -50,12 +55,13 @@ function AnalyticsContent() {
     useEffect(() => {
         fetchAnalytics();
         fetchInsights();
-    }, [period]);
+    }, [selectedMonth, selectedYear]);
 
     const fetchAnalytics = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/analytics/overview?period=${period}`);
+            // Period is now always 'month', but we pass month/year
+            const response = await fetch(`/api/analytics/overview?period=month&month=${selectedMonth}&year=${selectedYear}`);
             if (response.ok) {
                 const data = await response.json();
                 setAnalytics(data.analytics);
@@ -69,7 +75,7 @@ function AnalyticsContent() {
 
     const fetchInsights = async () => {
         try {
-            const response = await fetch(`/api/ai/insights?period=${period}`);
+            const response = await fetch(`/api/ai/insights?period=month&month=${selectedMonth}&year=${selectedYear}`);
             if (response.ok) {
                 const data = await response.json();
                 const formattedInsights: AIInsight[] = [
@@ -88,6 +94,12 @@ function AnalyticsContent() {
         }
     };
 
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i);
+
     if (loading) {
         return (
             <div className={styles.container}>
@@ -105,9 +117,24 @@ function AnalyticsContent() {
     if (!analytics || analytics.totalExpenses === 0) {
         return (
             <div className={styles.container}>
+                <div className={styles.header}>
+                    <h1 className={styles.title}>Analytics Dashboard</h1>
+                    <div className={styles.periodSelectors}>
+                        <Select
+                            value={selectedMonth.toString()}
+                            onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                            options={months.map((m, i) => ({ value: i.toString(), label: m }))}
+                        />
+                        <Select
+                            value={selectedYear.toString()}
+                            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                            options={years.map((y) => ({ value: y.toString(), label: y.toString() }))}
+                        />
+                    </div>
+                </div>
                 <div className={styles.empty}>
                     <div className={styles.emptyIcon}>📊</div>
-                    <h3>No analytics available</h3>
+                    <h3>No analytics available for {months[selectedMonth]} {selectedYear}</h3>
                     <p>Start adding expenses to see your spending analytics</p>
                     <Button onClick={() => router.push('/expenses/new')}>
                         + Add Your First Expense
@@ -120,31 +147,24 @@ function AnalyticsContent() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>Analytics Dashboard</h1>
-                <p className={styles.subtitle}>
-                    Visualize your spending patterns and get AI-powered insights
-                </p>
-            </div>
-
-            <div className={styles.filters}>
-                <button
-                    className={`${styles.periodButton} ${period === 'week' ? styles.active : ''}`}
-                    onClick={() => setPeriod('week')}
-                >
-                    This Week
-                </button>
-                <button
-                    className={`${styles.periodButton} ${period === 'month' ? styles.active : ''}`}
-                    onClick={() => setPeriod('month')}
-                >
-                    This Month
-                </button>
-                <button
-                    className={`${styles.periodButton} ${period === 'year' ? styles.active : ''}`}
-                    onClick={() => setPeriod('year')}
-                >
-                    This Year
-                </button>
+                <div>
+                    <h1 className={styles.title}>Analytics Dashboard</h1>
+                    <p className={styles.subtitle}>
+                        Insights for {months[selectedMonth]} {selectedYear}
+                    </p>
+                </div>
+                <div className={styles.periodSelectors}>
+                    <Select
+                        value={selectedMonth.toString()}
+                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                        options={months.map((m, i) => ({ value: i.toString(), label: m }))}
+                    />
+                    <Select
+                        value={selectedYear.toString()}
+                        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                        options={years.map((y) => ({ value: y.toString(), label: y.toString() }))}
+                    />
+                </div>
             </div>
 
             <div className={styles.statsGrid}>

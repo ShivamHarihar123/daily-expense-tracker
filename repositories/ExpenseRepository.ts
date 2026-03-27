@@ -347,6 +347,78 @@ export class ExpenseRepository {
     }
 
     /**
+     * Get user-wise expense summaries (admin only)
+     */
+    async getUserExpenseSummaries(
+        page: number = 1,
+        limit: number = 20,
+        search?: string
+    ): Promise<IPaginatedResponse<any>> {
+        await connectDB();
+        
+        // Define match stage for search
+        const matchStage: any = { isDeleted: false };
+        
+        // aggregate to group by userId
+        const aggregatePipeline: any[] = [
+            { $match: matchStage },
+            {
+                $group: {
+                    _id: '$userId',
+                    totalSpent: { $sum: '$amount' },
+                    totalExpenses: { $sum: 1 },
+                    lastExpenseDate: { $max: '$date' }
+                }
+            },
+            { $sort: { lastExpenseDate: -1 } }
+        ];
+
+        const allResults = await Expense.aggregate(aggregatePipeline);
+        const totalItems = allResults.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        const skip = (page - 1) * limit;
+        
+        const paginatedResults = allResults.slice(skip, skip + limit);
+
+        // Fetch user details for the results
+        const User = (await import('@/models/User')).default;
+        const userIds = paginatedResults.map(r => r._id);
+        const users = await User.find({ _id: { $in: userIds } }, 'name email').lean();
+        
+        const userMap = users.reduce((acc: any, user: any) => {
+            acc[user._id.toString()] = { _id: user._id.toString(), name: user.name, email: user.email };
+            return acc;
+        }, {});
+
+        const finalData = paginatedResults.map(r => ({
+            ...r,
+            user: userMap[r._id] || { _id: r._id, name: 'Unknown User', email: 'N/A' }
+        }));
+
+        // Apply search filtering on the combined data if needed
+        let filteredData = finalData;
+        if (search) {
+            const searchLower = search.toLowerCase();
+            filteredData = finalData.filter(d => 
+                d.user.name.toLowerCase().includes(searchLower) || 
+                d.user.email.toLowerCase().includes(searchLower)
+            );
+        }
+
+        return {
+            data: filteredData,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems,
+                itemsPerPage: limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+            },
+        };
+    }
+
+    /**
      * Delete any expense (admin only)
      */
     async deleteExpenseAdmin(id: string): Promise<boolean> {
