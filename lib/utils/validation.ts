@@ -38,6 +38,12 @@ export const changePasswordSchema = z.object({
         .regex(/(?=.*\d)/, 'Password must contain at least one number'),
 });
 
+export const updateProfileSchema = z.object({
+    name: z.string().min(2, 'Name must be at least 2 characters').optional(),
+    email: z.string().email('Invalid email address').optional(),
+    avatar: z.string().url('Invalid URL').optional(),
+});
+
 // ========================
 // EXPENSE VALIDATION SCHEMAS
 // ========================
@@ -111,4 +117,5 @@ export type UpdateExpenseInput = z.infer<typeof updateExpenseSchema>;
 export type ExpenseFilterInput = z.infer<typeof expenseFilterSchema>;
 export type CreateBudgetInput = z.infer<typeof createBudgetSchema>;
 export type UpdateBudgetInput = z.infer<typeof updateBudgetSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;

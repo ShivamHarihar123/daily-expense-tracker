@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -15,10 +16,11 @@ type Tab = 'profile' | 'security';
 function ProfileContent() {
     const router = useRouter();
     const { user, logout } = useAuth();
+    const { setUser } = useAuthStore();
     const [activeTab, setActiveTab] = useState<Tab>('profile');
     const [profileData, setProfileData] = useState({
-        name: user?.name || '',
-        email: user?.email || '',
+        name: '',
+        email: '',
     });
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -28,6 +30,15 @@ function ProfileContent() {
     const [saving, setSaving] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        if (user) {
+            setProfileData({
+                name: user.name || '',
+                email: user.email || '',
+            });
+        }
+    }, [user]);
 
     const getInitials = (name: string) => {
         return name
@@ -43,12 +54,25 @@ function ProfileContent() {
         setSaving(true);
 
         try {
-            // TODO: Implement profile update API
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            alert('Profile updated successfully!');
+            const response = await fetch('/api/auth/me', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(profileData),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                alert('Profile updated successfully!');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to update profile');
+            }
         } catch (error) {
             console.error('Failed to update profile:', error);
-            alert('Failed to update profile');
+            alert('An error occurred while updating profile');
         } finally {
             setSaving(false);
         }
@@ -71,31 +95,55 @@ function ProfileContent() {
         setSaving(true);
 
         try {
-            // TODO: Implement password change API
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            alert('Password changed successfully!');
-            setPasswordData({
-                currentPassword: '',
-                newPassword: '',
-                confirmPassword: '',
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currentPassword: passwordData.currentPassword,
+                    newPassword: passwordData.newPassword,
+                }),
             });
+
+            if (response.ok) {
+                alert('Password changed successfully!');
+                setPasswordData({
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: '',
+                });
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to change password');
+            }
         } catch (error) {
             console.error('Failed to change password:', error);
-            alert('Failed to change password');
+            alert('An error occurred while changing password');
         } finally {
             setSaving(false);
         }
     };
 
     const handleDeleteAccount = async () => {
+        setSaving(true);
         try {
-            // TODO: Implement account deletion API
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            logout();
-            router.push('/');
+            const response = await fetch('/api/auth/me', {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                logout();
+                router.push('/');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to delete account');
+            }
         } catch (error) {
             console.error('Failed to delete account:', error);
-            alert('Failed to delete account');
+            alert('An error occurred while deleting account');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -114,6 +162,20 @@ function ProfileContent() {
                     >
                         <span>👤</span>
                         Profile
+                    </button>
+                    <button
+                        className={`${styles.tabButton} ${activeTab === 'security' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('security')}
+                    >
+                        <span>🔒</span>
+                        Security
+                    </button>
+                    <button
+                        className={styles.deleteTabButton}
+                        onClick={() => setDeleteModalOpen(true)}
+                    >
+                        <span>🗑️</span>
+                        Delete Account
                     </button>
                 </div>
 
@@ -149,6 +211,60 @@ function ProfileContent() {
                                     <div className={styles.actions}>
                                         <Button type="submit" loading={saving}>
                                             Save Changes
+                                        </Button>
+                                    </div>
+                                </form>
+                            </Card.Body>
+                        </Card>
+                    )}
+
+                    {activeTab === 'security' && (
+                        <Card>
+                            <Card.Header title="Security Settings" />
+                            <Card.Body>
+                                <form onSubmit={handlePasswordChange} className={styles.form}>
+                                    <Input
+                                        type="password"
+                                        label="Current Password"
+                                        value={passwordData.currentPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                currentPassword: e.target.value,
+                                            })
+                                        }
+                                        required
+                                    />
+                                    <Input
+                                        type="password"
+                                        label="New Password"
+                                        value={passwordData.newPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                newPassword: e.target.value,
+                                            })
+                                        }
+                                        error={errors.newPassword}
+                                        required
+                                    />
+                                    <Input
+                                        type="password"
+                                        label="Confirm New Password"
+                                        value={passwordData.confirmPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                confirmPassword: e.target.value,
+                                            })
+                                        }
+                                        error={errors.confirmPassword}
+                                        required
+                                    />
+
+                                    <div className={styles.actions}>
+                                        <Button type="submit" loading={saving}>
+                                            Update Password
                                         </Button>
                                     </div>
                                 </form>
