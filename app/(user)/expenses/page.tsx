@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
@@ -44,16 +44,11 @@ function ExpenseListContent() {
         remaining: 0,
     });
 
-    useEffect(() => {
-        fetchExpenses();
-    }, [page, filters.search, selectedMonth, selectedYear, pathname]);
-
-    const fetchExpenses = async () => {
+    const fetchExpenses = useCallback(async () => {
         setLoading(true);
         try {
-            // Construct startDate as the first day of the selected month
             const startDate = new Date(selectedYear, selectedMonth, 1).toISOString();
-            
+
             const params = new URLSearchParams({
                 page: page.toString(),
                 limit: '10',
@@ -75,7 +70,11 @@ function ExpenseListContent() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, filters.search, selectedMonth, selectedYear]);
+
+    useEffect(() => {
+        fetchExpenses();
+    }, [page, filters.search, selectedMonth, selectedYear, pathname, fetchExpenses]);
 
     const handleSearchChange = (value: string) => {
         setFilters({ search: value });

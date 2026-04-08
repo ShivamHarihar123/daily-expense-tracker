@@ -30,6 +30,11 @@ export interface IUserUpdate {
     name?: string;
     avatar?: string;
     email?: string;
+    verified?: boolean;
+    oauthProvider?: 'google' | 'local';
+    oauthId?: string;
+    resetPasswordToken?: string;
+    resetPasswordExpiry?: Date;
 }
 
 // ========================

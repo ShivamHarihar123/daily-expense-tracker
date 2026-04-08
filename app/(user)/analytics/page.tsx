@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
@@ -52,15 +52,9 @@ function AnalyticsContent() {
     const [insights, setInsights] = useState<AIInsight[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchAnalytics();
-        fetchInsights();
-    }, [selectedMonth, selectedYear]);
-
-    const fetchAnalytics = async () => {
+    const fetchAnalytics = useCallback(async () => {
         setLoading(true);
         try {
-            // Period is now always 'month', but we pass month/year
             const response = await fetch(`/api/analytics/overview?period=month&month=${selectedMonth}&year=${selectedYear}`);
             if (response.ok) {
                 const data = await response.json();
@@ -71,9 +65,9 @@ function AnalyticsContent() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedMonth, selectedYear]);
 
-    const fetchInsights = async () => {
+    const fetchInsights = useCallback(async () => {
         try {
             const response = await fetch(`/api/ai/insights?period=month&month=${selectedMonth}&year=${selectedYear}`);
             if (response.ok) {
@@ -92,7 +86,12 @@ function AnalyticsContent() {
         } catch (error) {
             console.error('Failed to fetch insights:', error);
         }
-    };
+    }, [selectedMonth, selectedYear]);
+
+    useEffect(() => {
+        fetchAnalytics();
+        fetchInsights();
+    }, [selectedMonth, selectedYear, fetchAnalytics, fetchInsights]);
 
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',

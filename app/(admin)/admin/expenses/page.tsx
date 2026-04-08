@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card/Card';
 import styles from './page.module.scss';
@@ -36,24 +36,7 @@ export default function AdminExpensesPage() {
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
 
-    useEffect(() => {
-        fetchSummaries();
-    }, [page]);
-
-    // Handle search with debounce
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            if (page === 1) {
-                fetchSummaries();
-            } else {
-                setPage(1);
-            }
-        }, 500);
-
-        return () => clearTimeout(timeout);
-    }, [search]);
-
-    const fetchSummaries = async () => {
+    const fetchSummaries = useCallback(async () => {
         try {
             setLoading(true);
             const query = new URLSearchParams({
@@ -77,7 +60,24 @@ export default function AdminExpensesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [search, page]);
+
+    useEffect(() => {
+        fetchSummaries();
+    }, [page, fetchSummaries]);
+
+    // Handle search with debounce
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (page === 1) {
+                fetchSummaries();
+            } else {
+                setPage(1);
+            }
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [search, fetchSummaries, page]);
 
     if (loading && !summaries) {
         return (

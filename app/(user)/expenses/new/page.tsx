@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
@@ -30,13 +30,7 @@ function AddExpenseContent() {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    useEffect(() => {
-        if (formData.title.length > 2) {
-            fetchAISuggestions();
-        }
-    }, [formData.title, formData.notes]);
-
-    const fetchAISuggestions = async () => {
+    const fetchAISuggestions = useCallback(async () => {
         try {
             const response = await fetch('/api/ai/categorize', {
                 method: 'POST',
@@ -54,7 +48,13 @@ function AddExpenseContent() {
         } catch (error) {
             console.error('Failed to fetch AI suggestions:', error);
         }
-    };
+    }, [formData.title, formData.notes]);
+
+    useEffect(() => {
+        if (formData.title.length > 2) {
+            fetchAISuggestions();
+        }
+    }, [formData.title, formData.notes, fetchAISuggestions]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;

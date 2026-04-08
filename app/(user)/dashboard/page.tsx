@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Card from '@/components/ui/Card';
@@ -36,7 +36,7 @@ export default function DashboardPage() {
         }
     }, [isLoading, isAuthenticated, router]);
 
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = useCallback(async () => {
         setLoading(true);
         try {
             const [analyticsRes, budgetRes] = await Promise.all([
@@ -66,13 +66,13 @@ export default function DashboardPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedMonth, selectedYear]);
 
     useEffect(() => {
         if (isAuthenticated) {
             fetchDashboardData();
         }
-    }, [isAuthenticated, selectedMonth, selectedYear]);
+    }, [isAuthenticated, selectedMonth, selectedYear, fetchDashboardData]);
 
     if (isLoading) {
         return (
