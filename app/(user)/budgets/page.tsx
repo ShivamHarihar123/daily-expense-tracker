@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import Card from '@/components/ui/Card';
@@ -46,25 +46,19 @@ function BudgetsContent() {
     });
     const [saving, setSaving] = useState(false);
 
-    useEffect(() => {
-        fetchBudgetStatus();
-    }, [selectedMonth, selectedYear]);
-
-    const fetchBudgetStatus = async () => {
+    const fetchBudgetStatus = useCallback(async () => {
         setLoading(true);
         try {
-            // Fetch status for current selection
             const statusRes = await fetch(`/api/budgets/status?month=${selectedMonth}&year=${selectedYear}`);
-            // Fetch LIST of all set budgets
             const listRes = await fetch(`/api/budgets`);
-            
+
             if (statusRes.ok && listRes.ok) {
                 const statusData = await statusRes.json();
                 const listData = await listRes.json();
-                
+
                 setBudgetStatus(statusData);
                 setAllBudgets(listData.allBudgets || []);
-                
+
                 if (statusData.budget) {
                     setFormData({
                         monthlyLimit: statusData.budget.monthlyLimit.toString(),
@@ -82,7 +76,11 @@ function BudgetsContent() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedMonth, selectedYear]);
+
+    useEffect(() => {
+        fetchBudgetStatus();
+    }, [selectedMonth, selectedYear, fetchBudgetStatus]);
 
     const handleSaveBudget = async () => {
         if (!formData.monthlyLimit || isNaN(parseFloat(formData.monthlyLimit))) {

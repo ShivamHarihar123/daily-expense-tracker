@@ -25,16 +25,7 @@ export class BudgetService {
      * Create or update budget
      */
     async setBudget(userId: string, budgetData: IBudgetCreate): Promise<IBudget> {
-        const { month, year } = budgetData;
-        const existingBudget = await BudgetRepository.findByUserId(userId, month, year);
-
-        if (existingBudget) {
-            const updated = await BudgetRepository.update(userId, month, year, budgetData);
-            if (!updated) throw new Error('Failed to update budget');
-            return updated;
-        }
-
-        return await BudgetRepository.create(userId, budgetData);
+        return await BudgetRepository.upsert(userId, budgetData);
     }
 
     /**

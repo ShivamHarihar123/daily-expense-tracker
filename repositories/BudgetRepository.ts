@@ -29,7 +29,22 @@ export class BudgetRepository {
     }
 
     /**
-     * Create budget
+     * Create or update budget atomically (upsert)
+     * This is the safe way - never causes E11000 duplicate key errors
+     */
+    async upsert(userId: string, budgetData: IBudgetCreate): Promise<IBudget> {
+        await connectDB();
+        const { month, year, ...rest } = budgetData;
+        const budget = await Budget.findOneAndUpdate(
+            { userId, month, year },
+            { $set: { ...rest, userId, month, year } },
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
+        return budget.toJSON() as IBudget;
+    }
+
+    /**
+     * Create budget (direct insert - only use when you are certain no duplicate exists)
      */
     async create(userId: string, budgetData: IBudgetCreate): Promise<IBudget> {
         await connectDB();

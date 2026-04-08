@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card/Card';
 import Button from '@/components/ui/Button/Button';
@@ -20,11 +20,7 @@ export default function UserHistoryPage() {
     const [loading, setLoading] = useState(true);
     const [monthFilter, setMonthFilter] = useState<string>('all');
 
-    useEffect(() => {
-        fetchUserHistory();
-    }, [params.id]);
-
-    const fetchUserHistory = async () => {
+    const fetchUserHistory = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`/api/admin/users/${params.id}`);
@@ -46,7 +42,11 @@ export default function UserHistoryPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id, router]);
+
+    useEffect(() => {
+        fetchUserHistory();
+    }, [params.id, fetchUserHistory]);
 
     if (loading) {
         return (

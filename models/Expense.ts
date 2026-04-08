@@ -69,9 +69,9 @@ const ExpenseSchema = new Schema<IExpense>(
     {
         timestamps: true,
         toJSON: {
-            transform: function (doc, ret) {
+            transform: function (doc, ret: Record<string, any>) {
                 ret._id = ret._id.toString();
-                if (ret.__v !== undefined) delete ret.__v;
+                delete ret.__v;
                 return ret;
             },
         },

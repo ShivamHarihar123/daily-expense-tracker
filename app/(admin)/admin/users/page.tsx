@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import Card from '@/components/ui/Card/Card';
@@ -27,11 +27,7 @@ export default function AdminUsers() {
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
 
-    useEffect(() => {
-        fetchUsers();
-    }, [page, search]);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             setLoading(true);
             const params = new URLSearchParams({
@@ -53,7 +49,11 @@ export default function AdminUsers() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, search]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [page, search, fetchUsers]);
 
     const handleDelete = async (userId: string) => {
         if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {

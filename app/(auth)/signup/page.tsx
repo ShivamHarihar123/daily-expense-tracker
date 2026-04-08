@@ -86,85 +86,117 @@ export default function SignupPage() {
 
     return (
         <div className={styles.container}>
-            <div className={`${styles.card} ${styles.signup}`}>
-                <div className={styles.header}>
-                    <div className={styles.logo}>💰</div>
-                    <h1 className={styles.title}>Create Account</h1>
-                    <p className={styles.subtitle}>Start tracking your expenses today</p>
+            <div className={styles.loginWrapper}>
+                {/* Left Side: Illustration & Project Info */}
+                <div className={styles.infoSection}>
+                    <div className={styles.overlay}></div>
+                    <div className={styles.infoContent}>
+                        <div className={styles.projectLogo}>💰</div>
+                        <h1 className={styles.projectTitle}>Daily Expense Tracker</h1>
+                        <p className={styles.projectTagline}>
+                            Join thousands managing their finances smarter with AI-powered insights.
+                        </p>
+
+                        <ul className={styles.featureList}>
+                            <li>
+                                <span className={styles.featureIcon}>📊</span>
+                                <div>
+                                    <strong>Smart Categorization</strong>
+                                    <p>AI automatically sorts every expense for you.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span className={styles.featureIcon}>🎯</span>
+                                <div>
+                                    <strong>Budget Goals</strong>
+                                    <p>Set limits and get alerted before you overspend.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span className={styles.featureIcon}>📈</span>
+                                <div>
+                                    <strong>Visual Reports</strong>
+                                    <p>Beautiful charts to understand your spending trends.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                {/* Right Side: Form */}
+                {/* Right Side: Signup Form */}
                 <div className={styles.formSection}>
                     <div className={styles.formContent}>
-                    <div className={styles.mobileLogo}>💰</div>
-                    <h2 className={styles.title}>Create Account</h2>
+                        <div className={styles.mobileLogo}>💰</div>
+                        <h2 className={styles.title}>Create Account</h2>
 
-                        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
-                        {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+                        {errorMessage && (
+                            <div className={styles.errorMessage}>{errorMessage}</div>
+                        )}
+                        {successMessage && (
+                            <div className={styles.successMessage}>{successMessage}</div>
+                        )}
 
-                <form onSubmit={handleSubmit} className={styles.form}>
-                    <div className={styles.grid}>
-                        <Input
-                            type="text"
-                            name="name"
-                            label="Full Name"
-                            placeholder="John Doe"
-                            value={formData.name}
-                            onChange={handleChange}
-                            error={errors.name}
-                            required
-                        />
+                        <form onSubmit={handleSubmit} className={styles.form}>
+                            <Input
+                                type="text"
+                                name="name"
+                                label="Full Name"
+                                placeholder="John Doe"
+                                value={formData.name}
+                                onChange={handleChange}
+                                error={errors.name}
+                                required
+                            />
 
-                        <Input
-                            type="email"
-                            name="email"
-                            label="Email Address"
-                            placeholder="you@example.com"
-                            value={formData.email}
-                            onChange={handleChange}
-                            error={errors.email}
-                            required
-                        />
+                            <Input
+                                type="email"
+                                name="email"
+                                label="Email Address"
+                                placeholder="you@example.com"
+                                value={formData.email}
+                                onChange={handleChange}
+                                error={errors.email}
+                                required
+                            />
+
+                            <Input
+                                type="password"
+                                name="password"
+                                label="Password"
+                                placeholder="Strong password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                error={errors.password}
+                                helperText="Upper, lower, and number"
+                                required
+                            />
+
+                            <Input
+                                type="password"
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                placeholder="Re-enter password"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                error={errors.confirmPassword}
+                                required
+                            />
+
+                            <Button
+                                type="submit"
+                                fullWidth
+                                loading={loading}
+                                disabled={loading}
+                            >
+                                Create Account
+                            </Button>
+                        </form>
+
+                        <div className={styles.signupPrompt}>
+                            Already have an account?{' '}
+                            <Link href="/login">Sign in</Link>
+                        </div>
                     </div>
-
-                    <div className={styles.grid}>
-                        <Input
-                            type="password"
-                            name="password"
-                            label="Password"
-                            placeholder="Strong password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            error={errors.password}
-                            helperText="Upper, lower, and number"
-                            required
-                        />
-
-                        <Input
-                            type="password"
-                            name="confirmPassword"
-                            label="Confirm Password"
-                            placeholder="Re-enter password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            error={errors.confirmPassword}
-                            required
-                        />
-                    </div>
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        loading={loading}
-                        disabled={loading}
-                    >
-                        Create Account
-                    </Button>
-                </form>
-
-                <div className={styles.footer}>
-                    Already have an account?{' '}
-                    <Link href="/login">Sign in</Link>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
@@ -33,11 +33,7 @@ function ExpenseDetailContent() {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-    useEffect(() => {
-        fetchExpense();
-    }, [id]);
-
-    const fetchExpense = async () => {
+    const fetchExpense = useCallback(async () => {
         try {
             const response = await fetch(`/api/expenses/${id}`);
             if (response.ok) {
@@ -52,7 +48,11 @@ function ExpenseDetailContent() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, router]);
+
+    useEffect(() => {
+        fetchExpense();
+    }, [id, fetchExpense]);
 
     const handleDelete = async () => {
         setDeleting(true);
