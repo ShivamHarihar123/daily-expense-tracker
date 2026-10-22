@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import ExpenseService from '@/services/ExpenseService';
 import { authMiddleware } from '@/middleware/auth';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/expenses/export - Export expenses to CSV
  */

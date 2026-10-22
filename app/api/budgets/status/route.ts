@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import BudgetService from '@/services/BudgetService';
 import { authMiddleware } from '@/middleware/auth';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/budgets/status - Check budget status and alerts
  */

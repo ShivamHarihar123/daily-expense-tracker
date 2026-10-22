@@ -4,6 +4,8 @@ import { authMiddleware } from '@/middleware/auth';
 import { validate } from '@/lib/utils/validation';
 import { updateExpenseSchema } from '@/lib/utils/validation';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/expenses/[id] - Get single expense
  */

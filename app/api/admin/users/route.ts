@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuthMiddleware } from '@/middleware/adminAuth';
 import UserRepository from '@/repositories/UserRepository';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/admin/users - Get all users with pagination
  */
+
 export async function GET(request: NextRequest) {
     try {
         // Verify admin authentication

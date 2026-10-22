@@ -4,16 +4,13 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useTheme';
 import Button from '@/components/ui/Button';
-import styles from './Navbar.module.scss';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
     const { user, isAuthenticated, logout } = useAuth();
-    const { theme, toggleTheme } = useTheme();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +45,7 @@ export default function Navbar() {
             .slice(0, 2);
     };
 
-    // Hide navbar for admin and user application routes
+    // Hide navbar for admin and user application routes that have sidebars
     const sidebarRoutes = ['/admin', '/dashboard', '/expenses', '/analytics', '/budgets', '/profile', '/settings'];
     const isSidebarRoute = sidebarRoutes.some(route => pathname?.startsWith(route));
 
@@ -57,71 +54,77 @@ export default function Navbar() {
     }
 
     return (
-        <nav className={styles.navbar}>
-            <div className={styles.container}>
-                <Link href="/" className={styles.logo}>
-                    <span className={styles.icon}>💰</span>
-                    <span>ExpenseTracker</span>
+        <nav className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 transition-colors">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+                {/* Logo */}
+                <Link href="/" className="flex items-center gap-2.5 font-bold text-xl text-gray-900 dark:text-white tracking-tight group">
+                    <span className="text-2xl transform group-hover:scale-110 transition-transform">💰</span>
+                    <span>Expense<span className="text-indigo-600 dark:text-indigo-400">Tracker</span></span>
                 </Link>
 
+                {/* Authenticated Navigation Links */}
                 {isAuthenticated && (
-                    <div className={styles.nav}>
-                        <Link
-                            href="/dashboard"
-                            className={`${styles.navLink} ${pathname === '/dashboard' ? styles.active : ''}`}
-                        >
-                            Dashboard
-                        </Link>
-                        <Link
-                            href="/expenses"
-                            className={`${styles.navLink} ${pathname === '/expenses' ? styles.active : ''}`}
-                        >
-                            Expenses
-                        </Link>
-                        <Link
-                            href="/analytics"
-                            className={`${styles.navLink} ${pathname === '/analytics' ? styles.active : ''}`}
-                        >
-                            Analytics
-                        </Link>
-                        <Link
-                            href="/budgets"
-                            className={`${styles.navLink} ${pathname === '/budgets' ? styles.active : ''}`}
-                        >
-                            Budgets
-                        </Link>
+                    <div className="hidden md:flex items-center gap-1 sm:gap-2">
+                        {[
+                            { name: 'Dashboard', href: '/dashboard' },
+                            { name: 'Expenses', href: '/expenses' },
+                            { name: 'Analytics', href: '/analytics' },
+                            { name: 'Budgets', href: '/budgets' },
+                        ].map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-colors ${
+                                        isActive
+                                            ? 'bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400'
+                                            : 'text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+                                    }`}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
                     </div>
                 )}
 
-                <div className={styles.actions}>
+                {/* Right Actions */}
+                <div className="flex items-center gap-3">
                     <ThemeToggle />
 
                     {isAuthenticated && user ? (
-                        <div className={styles.userMenu} ref={dropdownRef}>
+                        <div className="relative" ref={dropdownRef}>
                             <button
-                                className={styles.userButton}
+                                className="flex items-center gap-2.5 p-1.5 sm:px-3 sm:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-slate-700"
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                                aria-expanded={dropdownOpen}
                             >
-                                <div className={styles.avatar}>{getInitials(user.name)}</div>
-                                <span className={styles.userName}>{user.name}</span>
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                                    {getInitials(user.name)}
+                                </div>
+                                <span className="hidden sm:inline-block text-sm font-medium text-gray-800 dark:text-slate-200 max-w-[120px] truncate">
+                                    {user.name}
+                                </span>
                                 <svg
-                                    width="16"
-                                    height="16"
+                                    width="14"
+                                    height="14"
                                     viewBox="0 0 16 16"
                                     fill="currentColor"
-                                    style={{
-                                        transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                        transition: 'transform 0.2s',
-                                    }}
+                                    className={`text-gray-500 dark:text-slate-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
                                 >
                                     <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" fill="none" />
                                 </svg>
                             </button>
 
                             {dropdownOpen && (
-                                <div className={styles.dropdown}>
+                                <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-800 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                                    <div className="px-4 py-2.5 border-b border-gray-100 dark:border-slate-800">
+                                        <p className="text-xs text-gray-400 dark:text-slate-500 font-medium">Signed in as</p>
+                                        <p className="text-sm font-semibold text-gray-800 dark:text-slate-200 truncate">{user.email}</p>
+                                    </div>
                                     <button
-                                        className={styles.dropdownItem}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-left"
                                         onClick={() => {
                                             router.push('/profile');
                                             setDropdownOpen(false);
@@ -131,7 +134,7 @@ export default function Navbar() {
                                         Profile
                                     </button>
                                     <button
-                                        className={styles.dropdownItem}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-left"
                                         onClick={() => {
                                             router.push('/settings');
                                             setDropdownOpen(false);
@@ -140,9 +143,9 @@ export default function Navbar() {
                                         <span>⚙️</span>
                                         Settings
                                     </button>
-                                    <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid #e5e7eb' }} />
+                                    <div className="my-1 border-t border-gray-100 dark:border-slate-800" />
                                     <button
-                                        className={`${styles.dropdownItem} ${styles.danger}`}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors text-left font-medium"
                                         onClick={handleLogout}
                                     >
                                         <span>🚪</span>
@@ -152,14 +155,21 @@ export default function Navbar() {
                             )}
                         </div>
                     ) : (
-                        <>
-                            <Button variant="ghost" onClick={() => router.push('/login')}>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                onClick={() => router.push('/login')}
+                                className="text-sm px-3.5 py-2 font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl"
+                            >
                                 Sign In
                             </Button>
-                            <Button onClick={() => router.push('/signup')}>
+                            <Button
+                                onClick={() => router.push('/signup')}
+                                className="text-sm px-4 py-2 font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-500/20"
+                            >
                                 Get Started
                             </Button>
-                        </>
+                        </div>
                     )}
                 </div>
             </div>

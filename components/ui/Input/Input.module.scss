@@ -106,15 +106,16 @@
 
 .errorMessage {
     display: block;
-    margin-top: $spacing-2;
-    font-size: $font-size-sm;
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
     color: $error;
 }
 
 .helperText {
     display: block;
-    margin-top: $spacing-2;
-    font-size: $font-size-sm;
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
     color: $gray-600;
 
     [data-theme='dark'] & {
@@ -135,6 +136,42 @@
     }
 }
 
+.passwordToggle,
+.rightElement {
+    position: absolute;
+    right: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: $gray-500;
+    padding: $spacing-1;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: color $transition-fast, background-color $transition-fast;
+
+    &:hover {
+        color: $gray-800;
+        background: rgba($gray-500, 0.1);
+    }
+
+    [data-theme='dark'] & {
+        color: $dark-text-secondary;
+
+        &:hover {
+            color: $dark-text;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
 .withIcon {
     padding-left: $spacing-10;
+}
+
+.withRightElement {
+    padding-right: $spacing-10;
 }

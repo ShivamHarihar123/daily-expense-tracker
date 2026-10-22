@@ -7,6 +7,8 @@ import { createExpenseSchema, expenseFilterSchema, paginationSchema } from '@/li
 
 import { IExpenseCreate } from '@/types/models';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/expenses - Get all expenses with filters
  */

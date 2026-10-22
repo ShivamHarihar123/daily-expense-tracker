@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import styles from './Skeleton.module.scss';
 
 export interface SkeletonProps {
     variant?: 'text' | 'title' | 'avatar' | 'card' | 'button';
@@ -9,6 +8,14 @@ export interface SkeletonProps {
     height?: string | number;
     className?: string;
 }
+
+const variantStyles: Record<string, string> = {
+    text: 'h-4 w-full rounded-md',
+    title: 'h-6 w-3/4 rounded-lg',
+    avatar: 'w-10 h-10 rounded-full',
+    card: 'h-48 w-full rounded-2xl',
+    button: 'h-10 w-28 rounded-xl',
+};
 
 const Skeleton: React.FC<SkeletonProps> = ({
     variant = 'text',
@@ -26,9 +33,11 @@ const Skeleton: React.FC<SkeletonProps> = ({
         style.height = typeof height === 'number' ? `${height}px` : height;
     }
 
+    const defaultVariant = variantStyles[variant] || variantStyles.text;
+
     return (
         <div
-            className={`${styles.skeleton} ${styles[variant]} ${className}`}
+            className={`animate-pulse bg-gray-200 dark:bg-slate-800 ${defaultVariant} ${className}`}
             style={style}
         />
     );

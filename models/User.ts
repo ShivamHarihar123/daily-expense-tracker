@@ -75,7 +75,6 @@ const UserSchema = new Schema<IUser>(
 );
 
 // Indexes
-UserSchema.index({ email: 1 }, { unique: true });
 UserSchema.index({ verificationToken: 1 });
 UserSchema.index({ resetPasswordToken: 1 });
 
