@@ -8,44 +8,66 @@
         radial-gradient(at 0% 0%, rgba($primary-600, 0.15) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba($accent-teal-500, 0.1) 0px, transparent 50%);
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
     color: white;
+
+    [data-theme='light'] & {
+        background-color: #f8fafc;
+        background-image: 
+            radial-gradient(at 0% 0%, rgba($primary-500, 0.08) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba($accent-teal-500, 0.05) 0px, transparent 50%);
+        color: $gray-900;
+    }
 }
 
+// Background Blobs
 .blob {
     position: absolute;
-    width: 600px;
-    height: 600px;
-    background: linear-gradient(135deg, rgba($primary-600, 0.2), rgba($accent-teal-500, 0.1));
-    filter: blur(80px);
     border-radius: 50%;
+    filter: blur(90px);
     z-index: 0;
-    animation: move 20s infinite alternate;
+    pointer-events: none;
+    animation: move 20s infinite alternate ease-in-out;
 
     &.blob1 {
+        width: 600px;
+        height: 600px;
         top: -100px;
         right: -100px;
+        background: linear-gradient(135deg, rgba($primary-600, 0.2), rgba($accent-teal-500, 0.12));
     }
 
     &.blob2 {
-        bottom: -200px;
+        width: 650px;
+        height: 650px;
+        top: 40%;
         left: -200px;
         background: linear-gradient(135deg, rgba($accent-blue-500, 0.15), rgba($primary-400, 0.1));
-        animation-delay: -5s;
+        animation-delay: -6s;
+    }
+
+    &.blob3 {
+        width: 550px;
+        height: 550px;
+        bottom: 10%;
+        right: -150px;
+        background: linear-gradient(135deg, rgba($primary-500, 0.15), rgba($accent-teal-400, 0.1));
+        animation-delay: -12s;
     }
 }
 
 @keyframes move {
     from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(50px, 50px) scale(1.1); }
+    to { transform: translate(40px, 40px) scale(1.08); }
 }
 
+// 1. HERO SECTION
 .hero {
     position: relative;
     z-index: 1;
     max-width: 1400px;
     margin: 0 auto;
-    padding: $spacing-20 $spacing-6;
+    padding: $spacing-16 $spacing-6 $spacing-12;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -54,60 +76,96 @@
 
     @include md-down {
         flex-direction: column;
-        padding-top: $spacing-12;
+        padding-top: $spacing-10;
+        padding-bottom: $spacing-12;
         text-align: center;
+        min-height: auto;
     }
 }
 
 .heroContent {
     flex: 1;
-    max-width: 650px;
+    max-width: 640px;
 }
 
 .badge {
     display: inline-flex;
     align-items: center;
     gap: $spacing-2;
-    padding: $spacing-2 $spacing-4;
-    background: rgba($primary-600, 0.1);
-    border: 1px solid rgba($primary-400, 0.2);
+    padding: 6px 16px;
+    background: rgba($primary-600, 0.15);
+    border: 1px solid rgba($primary-400, 0.3);
     border-radius: $radius-full;
-    color: $primary-400;
+    color: $primary-300;
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
     margin-bottom: $spacing-6;
-    @include glass;
+    backdrop-filter: blur(10px);
+
+    [data-theme='light'] & {
+        background: rgba($primary-50, 0.9);
+        border-color: rgba($primary-500, 0.3);
+        color: $primary-700;
+    }
+
+    .badgeSparkle {
+        font-size: 1.1rem;
+    }
 }
 
 .title {
-    font-size: 4.5rem;
+    font-size: 4.25rem;
     font-weight: 800;
-    line-height: $line-height-tight;
+    line-height: 1.1;
     margin-bottom: $spacing-6;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     color: white;
 
+    [data-theme='light'] & {
+        color: $gray-900;
+    }
+
     span {
-        @include gradient-text;
-        background-image: linear-gradient(135deg, white 30%, $primary-300 100%);
+        background-image: linear-gradient(135deg, white 40%, $primary-300 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        [data-theme='light'] & {
+            background-image: linear-gradient(135deg, $gray-900 40%, $primary-700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     }
 
     .highlight {
-        @include gradient-text;
         background-image: linear-gradient(135deg, $primary-400, $accent-teal-400);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @include lg-down {
+        font-size: 3.5rem;
     }
 
     @include md-down {
-        font-size: 3rem;
+        font-size: 2.75rem;
+    }
+
+    @include sm-down {
+        font-size: 2.25rem;
     }
 }
 
 .subtitle {
-    font-size: $font-size-xl;
-    color: $dark-text-secondary;
+    font-size: $font-size-lg;
+    color: #94a3b8;
     line-height: $line-height-relaxed;
-    margin-bottom: $spacing-10;
-    max-width: 580px;
+    margin-bottom: $spacing-8;
+    max-width: 560px;
+
+    [data-theme='light'] & {
+        color: $gray-600;
+    }
 
     @include md-down {
         margin-left: auto;
@@ -119,41 +177,132 @@
     display: flex;
     gap: $spacing-4;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: $spacing-8;
 
     @include md-down {
         justify-content: center;
+    }
+
+    .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-2;
+        padding: $spacing-3 $spacing-6;
+        font-weight: $font-weight-semibold;
+        box-shadow: 0 10px 25px -5px rgba($primary-600, 0.5);
+
+        .arrowIcon {
+            transition: transform $transition-fast;
+        }
+
+        &:hover .arrowIcon {
+            transform: translateX(4px);
+        }
+    }
+
+    .secondaryBtn {
+        padding: $spacing-3 $spacing-6;
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
+
+        [data-theme='light'] & {
+            color: $gray-800;
+            border-color: $gray-300;
+        }
+
+        &:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    .exploreLink {
+        color: #94a3b8;
+        font-size: $font-size-sm;
+        text-decoration: none;
+        padding: $spacing-2 $spacing-3;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $primary-400;
+        }
+    }
+}
+
+.heroTrust {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    flex-wrap: wrap;
+
+    @include md-down {
+        justify-content: center;
+    }
+
+    .stars {
+        color: #fbbf24;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+
+    .trustText {
+        font-size: $font-size-xs;
+        color: #64748b;
+
+        [data-theme='light'] & {
+            color: $gray-500;
+        }
+
+        strong {
+            color: #e2e8f0;
+
+            [data-theme='light'] & {
+                color: $gray-700;
+            }
+        }
     }
 }
 
 .heroImage {
     flex: 1;
     position: relative;
-    @include flex-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &::before {
         content: '';
         position: absolute;
         width: 120%;
         height: 120%;
-        background: radial-gradient(circle, rgba($primary-600, 0.2) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba($primary-600, 0.25) 0%, transparent 70%);
         z-index: -1;
     }
 }
 
 .preview {
-    @include glass;
+    position: relative;
     border-radius: $radius-2xl;
-    padding: $spacing-4;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: $shadow-dark-lg;
-    transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
-    transition: transform 0.5s $transition-base;
+    padding: $spacing-3;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+    transform: perspective(1000px) rotateY(-8deg) rotateX(4deg);
+    transition: transform 0.5s ease;
+
+    [data-theme='light'] & {
+        background: rgba(255, 255, 255, 0.8);
+        border-color: rgba($primary-500, 0.2);
+        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.15);
+    }
 
     &:hover {
         transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
     }
 
-    img {
+    .dashboardMockup {
         border-radius: $radius-xl;
         display: block;
         max-width: 100%;
@@ -161,20 +310,232 @@
     }
 }
 
+.floatingPill {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: 10px 16px;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $radius-full;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: float 4s ease-in-out infinite alternate;
+
+    [data-theme='light'] & {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: $gray-200;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    &.pillTop {
+        top: -20px;
+        right: -20px;
+        animation-delay: 0s;
+    }
+
+    &.pillBottom {
+        bottom: -20px;
+        left: -20px;
+        animation-delay: -2s;
+    }
+
+    .pillIcon {
+        font-size: 1.3rem;
+    }
+
+    .pillLabel {
+        display: block;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        [data-theme='light'] & {
+            color: $gray-500;
+        }
+    }
+
+    .pillValue {
+        display: block;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-bold;
+        color: #34d399;
+    }
+
+    @include sm-down {
+        display: none;
+    }
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-8px); }
+}
+
+// 2. STATS SECTION
+.statsSection {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto $spacing-16;
+    padding: 0 $spacing-6;
+}
+
+.statsGrid {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: $spacing-8 $spacing-6;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-dark-md;
+
+    [data-theme='light'] & {
+        background: white;
+        border-color: $gray-200;
+        box-shadow: $shadow-md;
+    }
+
+    @include md-down {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-6;
+    }
+
+    @include sm-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.statNumber {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ffffff 40%, $primary-400 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    [data-theme='light'] & {
+        background: linear-gradient(135deg, $gray-900 40%, $primary-600 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.statLabel {
+    font-size: $font-size-sm;
+    color: #94a3b8;
+    margin-top: 4px;
+
+    [data-theme='light'] & {
+        color: $gray-600;
+    }
+}
+
+.statDivider {
+    width: 1px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+
+    [data-theme='light'] & {
+        background: $gray-200;
+    }
+
+    @include md-down {
+        display: none;
+    }
+}
+
+// SECTION HEADERS
+.sectionHeader {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto $spacing-12;
+    padding: 0 $spacing-6;
+}
+
+.sectionBadge {
+    display: inline-block;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $primary-400;
+    margin-bottom: $spacing-3;
+
+    [data-theme='light'] & {
+        color: $primary-600;
+    }
+}
+
+.sectionTitle {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: $spacing-4;
+    letter-spacing: -0.02em;
+
+    [data-theme='light'] & {
+        color: $gray-900;
+    }
+
+    @include md-down {
+        font-size: 2.2rem;
+    }
+
+    @include sm-down {
+        font-size: 1.85rem;
+    }
+}
+
+.sectionSubtitle {
+    font-size: $font-size-base;
+    color: #94a3b8;
+    line-height: $line-height-relaxed;
+    margin: 0;
+
+    [data-theme='light'] & {
+        color: $gray-600;
+    }
+}
+
+// 3. FEATURES SECTION
 .features {
-    padding: $spacing-20 $spacing-6;
-    background: rgba(white, 0.02);
+    position: relative;
+    z-index: 1;
+    padding: $spacing-20 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    [data-theme='light'] & {
+        border-top-color: $gray-200;
+    }
 }
 
 .featureGrid {
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 0 auto;
+    padding: 0 $spacing-6;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: $spacing-8;
 
-    @include md-down {
+    @include lg-down {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include sm-down {
         grid-template-columns: 1fr;
     }
 }
@@ -183,29 +544,498 @@
     padding: $spacing-8;
     border-radius: $radius-2xl;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     transition: all $transition-base;
+    display: flex;
+    flex-direction: column;
+
+    [data-theme='light'] & {
+        background: white;
+        border-color: $gray-200;
+        box-shadow: $shadow-sm;
+    }
 
     &:hover {
         background: rgba(255, 255, 255, 0.06);
-        border-color: rgba($primary-400, 0.3);
-        transform: translateY(-8px);
+        border-color: rgba($primary-400, 0.4);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+
+        [data-theme='light'] & {
+            background: white;
+            border-color: $primary-300;
+            box-shadow: $shadow-lg;
+        }
     }
 
-    .icon {
-        font-size: 2.5rem;
-        margin-bottom: $spacing-6;
+    .iconWrapper {
+        font-size: 2.25rem;
+        width: 56px;
+        height: 56px;
+        border-radius: $radius-xl;
+        background: rgba($primary-600, 0.15);
+        border: 1px solid rgba($primary-400, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: $spacing-5;
+
+        [data-theme='light'] & {
+            background: $primary-50;
+            border-color: $primary-200;
+        }
     }
 
     h3 {
         font-size: $font-size-xl;
         font-weight: $font-weight-bold;
-        margin-bottom: $spacing-4;
+        margin-bottom: $spacing-3;
         color: white;
+
+        [data-theme='light'] & {
+            color: $gray-900;
+        }
     }
 
     p {
-        color: $dark-text-secondary;
+        color: #94a3b8;
         line-height: $line-height-normal;
+        font-size: $font-size-sm;
+        margin-bottom: $spacing-6;
+        flex: 1;
+
+        [data-theme='light'] & {
+            color: $gray-600;
+        }
+    }
+
+    .cardTag {
+        align-self: flex-start;
+        font-size: 0.75rem;
+        font-weight: $font-weight-medium;
+        color: $accent-teal-400;
+        background: rgba(20, 184, 166, 0.1);
+        padding: 4px 10px;
+        border-radius: $radius-md;
+        border: 1px solid rgba(20, 184, 166, 0.2);
+
+        [data-theme='light'] & {
+            color: $accent-teal-600;
+            background: rgba(20, 184, 166, 0.1);
+        }
+    }
+}
+
+// 4. WORKFLOW SECTION
+.workflowSection {
+    position: relative;
+    z-index: 1;
+    padding: $spacing-20 0;
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.stepsGrid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-6;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-8;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+        gap: $spacing-6;
+    }
+}
+
+.stepCard {
+    padding: $spacing-8;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: $radius-2xl;
+    position: relative;
+
+    [data-theme='light'] & {
+        background: white;
+        border-color: $gray-200;
+        box-shadow: $shadow-sm;
+    }
+
+    .stepNumber {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: rgba($primary-400, 0.35);
+        margin-bottom: $spacing-4;
+        line-height: 1;
+
+        [data-theme='light'] & {
+            color: rgba($primary-600, 0.25);
+        }
+    }
+
+    h3 {
+        font-size: $font-size-lg;
+        font-weight: $font-weight-bold;
+        color: white;
+        margin-bottom: $spacing-3;
+
+        [data-theme='light'] & {
+            color: $gray-900;
+        }
+    }
+
+    p {
+        color: #94a3b8;
+        font-size: $font-size-sm;
+        line-height: $line-height-relaxed;
+        margin: 0;
+
+        [data-theme='light'] & {
+            color: $gray-600;
+        }
+    }
+}
+
+// 5. COMPARISON SECTION
+.comparisonSection {
+    position: relative;
+    z-index: 1;
+    padding: $spacing-20 0;
+}
+
+.comparisonGrid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 $spacing-6;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-8;
+
+    @include md-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.comparisonColBad {
+    padding: $spacing-8;
+    background: rgba(239, 68, 68, 0.04);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: $radius-2xl;
+
+    [data-theme='light'] & {
+        background: #fef2f2;
+        border-color: #fee2e2;
+    }
+}
+
+.comparisonColGood {
+    padding: $spacing-8;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1.5px solid rgba(99, 102, 241, 0.4);
+    border-radius: $radius-2xl;
+    box-shadow: 0 20px 50px -15px rgba(99, 102, 241, 0.25);
+
+    [data-theme='light'] & {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+    }
+}
+
+.comparisonBadgeBad {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: #f87171;
+    margin-bottom: $spacing-6;
+}
+
+.comparisonBadgeGood {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $primary-300;
+    margin-bottom: $spacing-6;
+
+    [data-theme='light'] & {
+        color: $primary-700;
+    }
+}
+
+.comparisonList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+
+    li {
+        font-size: $font-size-sm;
+        line-height: $line-height-normal;
+        color: #cbd5e1;
+
+        [data-theme='light'] & {
+            color: $gray-700;
+        }
+    }
+}
+
+// 6. TESTIMONIALS SECTION
+.testimonialsSection {
+    position: relative;
+    z-index: 1;
+    padding: $spacing-20 0;
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.testimonialsGrid {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 $spacing-6;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-8;
+
+    @include lg-down {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include sm-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.testimonialCard {
+    padding: $spacing-8;
+    border-radius: $radius-2xl;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    [data-theme='light'] & {
+        background: white;
+        border-color: $gray-200;
+        box-shadow: $shadow-sm;
+    }
+
+    .testimonialStars {
+        color: #fbbf24;
+        font-size: 1.1rem;
+        margin-bottom: $spacing-4;
+        letter-spacing: 2px;
+    }
+
+    .quote {
+        font-size: $font-size-sm;
+        line-height: $line-height-relaxed;
+        color: #e2e8f0;
+        margin-bottom: $spacing-6;
+        font-style: italic;
+
+        [data-theme='light'] & {
+            color: $gray-700;
+        }
+    }
+
+    .author {
+        display: flex;
+        align-items: center;
+        gap: $spacing-3;
+
+        .authorAvatar {
+            font-size: 1.75rem;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: $radius-full;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            [data-theme='light'] & {
+                background: $gray-100;
+            }
+        }
+
+        .authorName {
+            display: block;
+            font-size: $font-size-sm;
+            color: white;
+
+            [data-theme='light'] & {
+                color: $gray-900;
+            }
+        }
+
+        .authorRole {
+            display: block;
+            font-size: $font-size-xs;
+            color: #94a3b8;
+
+            [data-theme='light'] & {
+                color: $gray-500;
+            }
+        }
+    }
+}
+
+// 7. FAQ SECTION
+.faqSection {
+    position: relative;
+    z-index: 1;
+    padding: $spacing-20 0;
+}
+
+.faqGrid {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 $spacing-6;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-8;
+
+    @include sm-down {
+        grid-template-columns: 1fr;
+    }
+}
+
+.faqItem {
+    padding: $spacing-6;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: $radius-xl;
+
+    [data-theme='light'] & {
+        background: white;
+        border-color: $gray-200;
+    }
+
+    h4 {
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        color: white;
+        margin-bottom: $spacing-2;
+
+        [data-theme='light'] & {
+            color: $gray-900;
+        }
+    }
+
+    p {
+        font-size: $font-size-sm;
+        color: #94a3b8;
+        line-height: $line-height-relaxed;
+        margin: 0;
+
+        [data-theme='light'] & {
+            color: $gray-600;
+        }
+    }
+}
+
+// 8. CTA BANNER
+.ctaBannerSection {
+    position: relative;
+    z-index: 1;
+    padding: $spacing-12 $spacing-6 $spacing-20;
+}
+
+.ctaBanner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: $spacing-16 $spacing-8;
+    background: linear-gradient(135deg, $primary-700 0%, $primary-900 100%);
+    border-radius: $radius-3xl;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 40px 100px -20px rgba(99, 102, 241, 0.4);
+
+    .ctaBlob {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        top: -150px;
+        right: -100px;
+        background: radial-gradient(circle, rgba($accent-teal-400, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .ctaContent {
+        position: relative;
+        z-index: 2;
+        max-width: 680px;
+        margin: 0 auto;
+
+        h2 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: $spacing-4;
+            line-height: 1.2;
+
+            @include sm-down {
+                font-size: 2rem;
+            }
+        }
+
+        p {
+            font-size: $font-size-lg;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: $line-height-relaxed;
+            margin-bottom: $spacing-8;
+        }
+    }
+
+    .ctaButtons {
+        display: flex;
+        gap: $spacing-4;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: $spacing-6;
+
+        .ctaPrimaryBtn {
+            background: #ffffff;
+            color: $primary-900;
+            font-weight: $font-weight-bold;
+            padding: $spacing-4 $spacing-8;
+
+            &:hover {
+                background: #f1f5f9;
+                color: $primary-800;
+            }
+
+            .arrowIcon {
+                display: inline-block;
+                margin-left: $spacing-1;
+                transition: transform $transition-fast;
+            }
+
+            &:hover .arrowIcon {
+                transform: translateX(4px);
+            }
+        }
+
+        .ctaSecondaryBtn {
+            border-color: rgba(255, 255, 255, 0.35);
+            color: white;
+            padding: $spacing-4 $spacing-8;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: white;
+            }
+        }
+    }
+
+    .ctaPerks {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-6;
+        font-size: $font-size-xs;
+        color: rgba(255, 255, 255, 0.8);
+        flex-wrap: wrap;
     }
 }

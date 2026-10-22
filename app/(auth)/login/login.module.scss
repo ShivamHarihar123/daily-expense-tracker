@@ -2,31 +2,40 @@
 @import '../../../styles/mixins.scss';
 
 .container {
-    height: 100vh;
-    @include flex-center;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
-    overflow: hidden;
     padding: $spacing-6;
+    overflow-y: auto;
+
+    @include sm-down {
+        padding: $spacing-3;
+        align-items: flex-start;
+    }
 }
 
 .loginWrapper {
     width: 100%;
-    max-width: 1100px;
-    height: 85vh;
-    max-height: 800px; // Slightly taller
+    max-width: 1050px;
+    min-height: 600px;
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: $radius-3xl;
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+    border-radius: $radius-2xl;
+    box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.7);
     display: flex;
     overflow: hidden;
+    margin: auto;
 
     @include md-down {
-        height: auto;
-        max-height: unset;
+        min-height: unset;
         max-width: 480px;
         flex-direction: column;
+        border-radius: $radius-xl;
+        margin: $spacing-4 auto;
     }
 }
 
@@ -34,8 +43,10 @@
     flex: 1.1;
     background: linear-gradient(135deg, $primary-600 0%, $primary-900 100%);
     position: relative;
-    padding: $spacing-12;
-    @include flex-center;
+    padding: $spacing-10 $spacing-8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
 
     &::after {
@@ -52,25 +63,28 @@
     .infoContent {
         position: relative;
         z-index: 2;
-        max-width: 450px;
+        max-width: 440px;
     }
 
     .projectLogo {
-        font-size: 4rem;
-        margin-bottom: $spacing-6;
+        font-size: 3rem;
+        margin-bottom: $spacing-4;
+        display: inline-block;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
     }
 
     .projectTitle {
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: $font-weight-bold;
-        margin-bottom: $spacing-4;
-        line-height: 1.1;
+        margin-bottom: $spacing-3;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
     }
 
     .projectTagline {
-        font-size: $font-size-xl;
-        opacity: 0.95;
-        margin-bottom: $spacing-12;
+        font-size: $font-size-base;
+        opacity: 0.9;
+        margin-bottom: $spacing-8;
         line-height: $line-height-relaxed;
     }
 }
@@ -79,56 +93,67 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    @include flex-column;
-    gap: $spacing-8;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-5;
 
     li {
         display: flex;
-        gap: $spacing-5;
+        gap: $spacing-4;
         align-items: center;
 
         .featureIcon {
-            font-size: 2.5rem;
-            width: 54px;
-            height: 54px;
-            background: rgba(white, 0.12);
-            border-radius: $radius-xl;
-            @include flex-center;
+            font-size: 1.75rem;
+            width: 46px;
+            height: 46px;
+            background: rgba(white, 0.15);
+            border-radius: $radius-lg;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         strong {
             display: block;
-            font-size: $font-size-lg;
-            margin-bottom: $spacing-1;
+            font-size: $font-size-base;
+            font-weight: $font-weight-semibold;
+            margin-bottom: 2px;
+            color: #ffffff;
         }
 
         p {
             font-size: $font-size-sm;
-            opacity: 0.8;
+            opacity: 0.85;
             margin: 0;
+            line-height: 1.4;
         }
     }
 }
 
 .formSection {
     flex: 1;
-    @include flex-center;
-    padding: $spacing-12;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: $spacing-10 $spacing-8;
     background: #111827;
 
     @include sm-down {
-        padding: $spacing-8 $spacing-6;
+        padding: $spacing-6 $spacing-4;
     }
 }
 
 .formContent {
     width: 100%;
-    max-width: 360px;
+    max-width: 380px;
 
     .mobileLogo {
-        font-size: 2.5rem;
-        margin-bottom: $spacing-6;
+        font-size: 2.25rem;
+        margin-bottom: $spacing-4;
         display: none;
 
         @include md-down {
@@ -138,10 +163,11 @@
     }
 
     .title {
-        font-size: $font-size-3xl;
+        font-size: 1.75rem;
         font-weight: $font-weight-bold;
-        color: white;
-        margin-bottom: $spacing-2;
+        color: #ffffff;
+        margin-bottom: $spacing-1;
+        letter-spacing: -0.01em;
 
         @include md-down {
             text-align: center;
@@ -149,8 +175,10 @@
     }
 
     .subtitle {
-        color: $gray-400;
-        margin-bottom: $spacing-10;
+        color: #94a3b8;
+        font-size: $font-size-sm;
+        margin-bottom: $spacing-6;
+        line-height: 1.4;
 
         @include md-down {
             text-align: center;
@@ -159,50 +187,165 @@
 }
 
 .form {
-    @include flex-column;
-    gap: $spacing-5;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+
+    // Explicit high-contrast input styling for auth card
+    label {
+        color: #f1f5f9 !important;
+        font-weight: 500;
+        font-size: $font-size-sm;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+    input {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+        color: #ffffff !important;
+        border-radius: $radius-lg;
+        padding: 10px 14px;
+        font-size: $font-size-base;
+        transition: all $transition-fast;
+
+        &:focus {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: $primary-400 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+        }
+
+        &::placeholder {
+            color: #64748b !important;
+        }
+    }
+
+    [class*='helperText'] {
+        color: #94a3b8 !important;
+        font-size: $font-size-xs;
+        margin-top: 2px;
+    }
+
+    [class*='errorMessage'] {
+        color: #fca5a5 !important;
+        font-size: $font-size-xs;
+        margin-top: 2px;
+    }
+
+    [class*='passwordToggle'] {
+        color: #94a3b8 !important;
+
+        &:hover {
+            color: #ffffff !important;
+        }
+    }
+
+    [class*='inputWrapper'] {
+        margin-bottom: 0 !important;
+    }
+}
+
+.formOptions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: $spacing-1;
+    font-size: $font-size-sm;
+
+    .rememberMe {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        color: #cbd5e1;
+        cursor: pointer;
+        user-select: none;
+
+        input[type='checkbox'] {
+            width: 16px;
+            height: 16px;
+            accent-color: $primary-600;
+            cursor: pointer;
+        }
+    }
+
+    .forgotLink {
+        color: $primary-400;
+        text-decoration: none;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    }
 }
 
 .signupPrompt {
     text-align: center;
-    margin-top: $spacing-8; // Reduce margin to ensure it fits
+    margin-top: $spacing-6;
     padding-top: $spacing-4;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: $gray-400; // Brighter text for better contrast
+    color: #94a3b8;
     font-size: $font-size-sm;
 
     a {
         color: $primary-400;
-        font-weight: $font-weight-bold;
+        font-weight: $font-weight-semibold;
         text-decoration: none;
         margin-left: $spacing-1;
         transition: all $transition-fast;
 
         &:hover {
-            color: white;
+            color: #ffffff;
             text-decoration: underline;
         }
     }
 }
 
 .errorMessage {
-    padding: $spacing-4;
+    padding: 10px 14px;
     background: rgba($error, 0.15);
     color: #fca5a5;
-    border: 1px solid rgba($error, 0.3);
+    border: 1px solid rgba($error, 0.35);
     border-radius: $radius-lg;
     font-size: $font-size-sm;
-    margin-bottom: $spacing-6;
+    margin-bottom: $spacing-4;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-2;
 }
 
 .successMessage {
-    padding: $spacing-4;
+    padding: 10px 14px;
     background: rgba($success, 0.15);
     color: #86efac;
-    border: 1px solid rgba($success, 0.3);
+    border: 1px solid rgba($success, 0.35);
     border-radius: $radius-lg;
     font-size: $font-size-sm;
-    margin-bottom: $spacing-6;
+    margin-bottom: $spacing-4;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-2;
+}
+
+.termsNotice {
+    text-align: center;
+    font-size: $font-size-xs;
+    color: #64748b;
+    margin-top: $spacing-4;
+    line-height: 1.4;
+
+    a {
+        color: #94a3b8;
+        text-decoration: underline;
+
+        &:hover {
+            color: #ffffff;
+        }
+    }
 }

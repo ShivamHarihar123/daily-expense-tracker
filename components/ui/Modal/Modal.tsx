@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import styles from './Modal.module.scss';
 
 export interface ModalProps {
     isOpen: boolean;
@@ -14,6 +13,13 @@ export interface ModalProps {
     closeOnOverlayClick?: boolean;
 }
 
+const sizeClasses: Record<string, string> = {
+    sm: 'max-w-md',
+    md: 'max-w-lg',
+    lg: 'max-w-2xl',
+    xl: 'max-w-4xl',
+};
+
 const Modal: React.FC<ModalProps> = ({
     isOpen,
     onClose,
@@ -23,6 +29,12 @@ const Modal: React.FC<ModalProps> = ({
     size = 'md',
     closeOnOverlayClick = true,
 }) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -46,7 +58,7 @@ const Modal: React.FC<ModalProps> = ({
         return () => document.removeEventListener('keydown', handleEscape);
     }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (closeOnOverlayClick && e.target === e.currentTarget) {
@@ -55,19 +67,24 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     const modalContent = (
-        <div className={styles.overlay} onClick={handleOverlayClick}>
-            <div className={`${styles.modal} ${styles[size]}`}>
+        <div
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
+            onClick={handleOverlayClick}
+        >
+            <div
+                className={`relative w-full ${sizeClasses[size] || sizeClasses.md} bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden animate-in zoom-in-95 duration-200 my-8`}
+            >
                 {title && (
-                    <div className={styles.header}>
-                        <h2 className={styles.title}>{title}</h2>
+                    <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{title}</h2>
                         <button
-                            className={styles.closeButton}
+                            className="p-1.5 rounded-xl text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
                             onClick={onClose}
                             aria-label="Close modal"
                         >
                             <svg
-                                width="24"
-                                height="24"
+                                width="20"
+                                height="20"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -81,8 +98,12 @@ const Modal: React.FC<ModalProps> = ({
                         </button>
                     </div>
                 )}
-                <div className={styles.body}>{children}</div>
-                {footer && <div className={styles.footer}>{footer}</div>}
+                <div className="p-6 text-gray-700 dark:text-slate-300">{children}</div>
+                {footer && (
+                    <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/50 flex items-center justify-end gap-3">
+                        {footer}
+                    </div>
+                )}
             </div>
         </div>
     );

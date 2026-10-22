@@ -4,9 +4,12 @@ import UserRepository from '@/repositories/UserRepository';
 import ExpenseRepository from '@/repositories/ExpenseRepository';
 import BudgetRepository from '@/repositories/BudgetRepository';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/admin/dashboard - Get admin dashboard statistics
  */
+
 export async function GET(request: NextRequest) {
     try {
         // Verify admin authentication

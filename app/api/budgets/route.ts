@@ -4,6 +4,8 @@ import { authMiddleware } from '@/middleware/auth';
 import { validate } from '@/lib/utils/validation';
 import { createBudgetSchema, updateBudgetSchema } from '@/lib/utils/validation';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/budgets - Get user budget
  */

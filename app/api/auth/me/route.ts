@@ -3,6 +3,8 @@ import { authMiddleware } from '@/middleware/auth';
 import { updateProfileSchema, validate } from '@/lib/utils/validation';
 import UserRepository from '@/repositories/UserRepository';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/auth/me - Get current user
  */

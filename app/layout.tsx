@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
+import { Inter } from "next/font/google";
 import "./globals.scss";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Daily Expense Tracker - AI-Powered SaaS",
@@ -13,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body data-theme="dark">
+    <html lang="en" className={inter.variable}>
+      <body data-theme="dark" className={inter.className}>
         {children}
       </body>
     </html>

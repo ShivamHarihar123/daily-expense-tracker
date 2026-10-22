@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminAuthMiddleware } from '@/middleware/adminAuth';
 import UserRepository from '@/repositories/UserRepository';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/admin/users/[id] - Get user details and history
  */
+
 export async function GET(
     request: NextRequest,
     { params }: { params: { id: string } }

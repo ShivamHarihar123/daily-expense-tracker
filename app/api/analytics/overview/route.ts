@@ -3,9 +3,12 @@ import ExpenseRepository from '@/repositories/ExpenseRepository';
 import { authMiddleware } from '@/middleware/auth';
 import { startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths } from 'date-fns';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/analytics/overview - Get analytics overview
  */
+
 export async function GET(request: NextRequest) {
     try {
         const authResult = await authMiddleware(request);

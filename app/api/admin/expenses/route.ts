@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import ExpenseRepository from '@/repositories/ExpenseRepository';
 import { adminAuthMiddleware } from '@/middleware/adminAuth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
     // Check admin authorization
     const auth = await adminAuthMiddleware(request);

@@ -4,6 +4,8 @@ import { generateInsights } from '@/lib/ai/insights';
 import { authMiddleware } from '@/middleware/auth';
 import { startOfMonth, endOfMonth } from 'date-fns';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/ai/insights - Get AI-powered financial insights
  */
